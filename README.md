@@ -2,10 +2,11 @@
 
 Gathers data from fitness tracking services and exposes it for use in video games.
 
-## Uasage
+## Usage
 
 ### Installation
 ```
+# Install node.js
 # Install PhantomJS headless browser
 npm install -g casperjs
 npm install
