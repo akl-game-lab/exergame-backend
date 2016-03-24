@@ -6,7 +6,7 @@ Gathers data from fitness tracking services and exposes it for use in video game
 
 ### Installation
 ```
-# Install node.js (and npm)
+# Install node.js v4 (and npm)
 # Install mongodb
 # Install PhantomJS headless browser
 npm install -g casperjs
