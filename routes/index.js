@@ -45,9 +45,27 @@ module.exports = function(passport){
 
 	/* Handle Logout */
 	router.get('/signout', function(req, res) {
-		req.logout();
+		req.logout()
 		res.redirect('/');
 	});
+
+	/* Account Settings*/
+	router.get('/settings', isAuthenticated, function(req, res){
+		res.render('settings', { user: req.user });
+	});
+
+	router.post('/settings',isAuthenticated, function (req, res) {
+		console.log(req.body);
+		req.user.credentials = {
+			exerciseDotCom: {
+				username: req.body['credentials.exerciseDotCom.username'] || undefined,
+				password: req.body['credentials.exerciseDotCom.password'] || undefined
+			}
+		};
+		// req.user.credentials.exerciseDotCom.username = req.body.credentials.exerciseDotCom.username || undefined;
+		// req.user.credentials.exerciseDotCom.password = req.body.credentials.exerciseDotCom.password || undefined;
+	} )
+
 
 	return router;
 }
