@@ -1,0 +1,14 @@
+extends layout
+
+block content
+	div.container
+		h1 Registration Details
+			div
+				form(class='form-signin', action='/settings', method='POST')
+					input(type='text', name='credentials.exerciseDotCom.username', class='form-control', placeholder='Username',required, autofocus)
+					input(type='password', name='credentials.exerciseDotCom.password', class='form-control nomargin', placeholder='Password', required)
+					button(class='btn btn-lg btn-primary btn-block', type='submit') Register
+					span.clearfix
+			#message
+				if message
+					h1.text-center.error-message #{message}
