@@ -1,10 +1,29 @@
 var schedule = require('node-schedule');
+var User = require('../models/user');
 const exec = require('child_process').exec;
 
 // Run every hour
-schedule.scheduleJob({minute: [0, 20, 40]}, function () {
-	console.log(`casperjs exerciseDotCom.js --uname="${process.env.EXERCISE_DOT_COM_UNAME}" --pword="${process.env.EXERCISE_DOT_COM_PWORD}"`);
-	const child = exec(`pwd && casperjs exerciseDotCom.js --uname="${process.env.EXERCISE_DOT_COM_UNAME}" --pword="${process.env.EXERCISE_DOT_COM_PWORD}"`,
+schedule.scheduleJob({minute: [0, 30, 40]}, function () {
+	User.find(function (err, users) {
+		if (err) {
+			console.error(err);
+		} else {
+			for (var i = 0; i < users.length; i++) {
+				// If user has exercise.com credentials, run casper.
+				if (users[i].credentials.exerciseDotCom.username && users[i].credentials.exerciseDotCom.password) {
+					retrieveExerciseData(users[i].credentials.exerciseDotCom.username, users[i].credentials.exerciseDotCom.password);
+				} else {
+					//temp
+					console.log(`User: ${users[i].email} has no exercise.com credentials`);
+				}
+			}
+		}
+	});
+});
+
+function retrieveExerciseData(username, password) {
+	console.log(`casperjs exerciseDotCom.js --uname="${username}" --pword="${password}"`);
+	const child = exec(`pwd && casperjs exerciseDotCom.js --uname="${username}" --pword="${password}"`,
 	{
 		cwd: './misc/casper'
 	},
@@ -17,4 +36,4 @@ schedule.scheduleJob({minute: [0, 20, 40]}, function () {
 			// TODO: Deal with Data
 		}
 	});
-});
+}

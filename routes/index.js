@@ -63,6 +63,7 @@ module.exports = function(passport){
 		};
 		req.user.save(function (err) {
 			if (err) {
+				//@TODO: better way to tell users about errors.
 				console.error(err);
 			}
 			res.redirect('/home');
