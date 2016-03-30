@@ -54,17 +54,22 @@ module.exports = function(passport){
 		res.render('settings', { user: req.user });
 	});
 
-	router.post('/settings',isAuthenticated, function (req, res) {
-		console.log(req.body);
+	router.post('/settings', isAuthenticated, function (req, res) {
 		req.user.credentials = {
 			exerciseDotCom: {
 				username: req.body['credentials.exerciseDotCom.username'] || undefined,
 				password: req.body['credentials.exerciseDotCom.password'] || undefined
 			}
 		};
+		req.user.save(function (err) {
+			if (err) {
+				console.error(err);
+			}
+			res.redirect('/home');
+		});
 		// req.user.credentials.exerciseDotCom.username = req.body.credentials.exerciseDotCom.username || undefined;
 		// req.user.credentials.exerciseDotCom.password = req.body.credentials.exerciseDotCom.password || undefined;
-	} )
+	});
 
 
 	return router;
