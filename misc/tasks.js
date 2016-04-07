@@ -3,14 +3,14 @@ var User = require('../models/user');
 const exec = require('child_process').exec;
 
 
-findUser();
+getUserData();
 
 // Run every hour
 schedule.scheduleJob({minute: [0, 30, 40]}, function () {
-	findUser();
+	getUserData();
 });
 
-function findUser(){
+function getUserData(){
 	User.find(function (err, users) {
 		if (err) {
 			console.error(err);
