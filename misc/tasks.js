@@ -3,7 +3,11 @@ var User = require('../models/user');
 const exec = require('child_process').exec;
 
 
-getUserData();
+process.argv.forEach(function(element){
+   if(element=='--force'){
+		 getUserData();
+	 }
+});
 
 // Run every hour
 schedule.scheduleJob({minute: [0, 30, 40]}, function () {
