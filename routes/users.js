@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Workout = require('../models/workout');
+var ExerciseDotCom = require('../models/sources/exerciseDotCom');
 var User = require('../models/user')
 var xml = require('xml');
 
@@ -51,14 +52,22 @@ router.get('/:id/workouts', function (req, res, next) {
   var userId = req.params.id;
   var from = req.query.from;
   var to = req.query.to;
-  Workout.find({
+  ExerciseDotCom.find({
     'userId': userId,
-    'workoutDate': {
-      $gte: new Date(from),
-      $lt: new Date(to)
+    'used': {
+      $not: true
     }
-  }, function (workouts) {
-    res.send(xml(results))
+  }, function (err, workouts) {
+    if (err) {
+      res.send(err);
+      return;
+    }
+    // Each unsent workout.
+    for(var i in workouts) {
+      workouts[i].used = true;
+      workouts[i].save();
+    }
+    res.send(xml(workouts));
   });
 });
 

@@ -6,7 +6,8 @@ var ExerciseDotComSchema = new Schema({
   data: Schema.Types.Mixed,
   dateRetrieved: Date,
   gamesUsed: [Schema.Types.ObjectId],
-  userId: Schema.Types.ObjectId
+  used: Boolean,
+  userId: Number
 });
 
 module.exports = mongoose.model('ExerciseDotComExercises', ExerciseDotComSchema);

@@ -22,7 +22,7 @@ function getUserData() {
 			for (var i = 0; i < users.length; i++) {
 				// If user has exercise.com credentials, run casper.
 				if (users[i].credentials.exerciseDotCom.username && users[i].credentials.exerciseDotCom.password) {
-					retrieveExerciseData(users[i]._id, users[i].credentials.exerciseDotCom.username, users[i].credentials.exerciseDotCom.password);
+					retrieveExerciseData(users[i].id, users[i].credentials.exerciseDotCom.username, users[i].credentials.exerciseDotCom.password);
 				} else {
 					//temp
 					console.log(`User: ${users[i].email} has no exercise.com credentials`);
