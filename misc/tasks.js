@@ -2,8 +2,15 @@ var schedule = require('node-schedule');
 var User = require('../models/user');
 const exec = require('child_process').exec;
 
+
+getUserData();
+
 // Run every hour
 schedule.scheduleJob({minute: [0, 30, 40]}, function () {
+	getUserData();
+});
+
+function getUserData(){
 	User.find(function (err, users) {
 		if (err) {
 			console.error(err);
@@ -19,7 +26,8 @@ schedule.scheduleJob({minute: [0, 30, 40]}, function () {
 			}
 		}
 	});
-});
+}
+
 
 function retrieveExerciseData(username, password) {
 	console.log(`casperjs exerciseDotCom.js --uname="${username}" --pword="${password}"`);
