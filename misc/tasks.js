@@ -2,15 +2,18 @@ var schedule = require('node-schedule');
 var User = require('../models/user');
 const exec = require('child_process').exec;
 
-
-getUserData();
+process.argv.forEach(function(element) {
+	if(element === '--force') {
+		getUserData();
+	}
+});
 
 // Run every hour
 schedule.scheduleJob({minute: [0, 30, 40]}, function () {
 	getUserData();
 });
 
-function getUserData(){
+function getUserData() {
 	User.find(function (err, users) {
 		if (err) {
 			console.error(err);
