@@ -1,5 +1,6 @@
 var schedule = require('node-schedule');
 var User = require('../models/user');
+var ExerciseDotCom = require('../models/sources/exerciseDotCom');
 const exec = require('child_process').exec;
 
 process.argv.forEach(function(element) {
@@ -9,7 +10,7 @@ process.argv.forEach(function(element) {
 });
 
 // Run every hour
-schedule.scheduleJob({minute: [0, 30, 40]}, function () {
+schedule.scheduleJob({minute: [0, 20, 40]}, function () {
 	getUserData();
 });
 
@@ -21,7 +22,7 @@ function getUserData() {
 			for (var i = 0; i < users.length; i++) {
 				// If user has exercise.com credentials, run casper.
 				if (users[i].credentials.exerciseDotCom.username && users[i].credentials.exerciseDotCom.password) {
-					retrieveExerciseData(users[i].credentials.exerciseDotCom.username, users[i].credentials.exerciseDotCom.password);
+					retrieveExerciseData(users[i]._id, users[i].credentials.exerciseDotCom.username, users[i].credentials.exerciseDotCom.password);
 				} else {
 					//temp
 					console.log(`User: ${users[i].email} has no exercise.com credentials`);
@@ -32,7 +33,7 @@ function getUserData() {
 }
 
 
-function retrieveExerciseData(username, password) {
+function retrieveExerciseData(id, username, password) {
 	console.log(`casperjs exerciseDotCom.js --uname="${username}" --pword="${password}"`);
 	const child = exec(`pwd && casperjs exerciseDotCom.js --uname="${username}" --pword="${password}"`,
 	{
@@ -44,7 +45,31 @@ function retrieveExerciseData(username, password) {
 		if (error !== null) {
 			console.log(`exec error: ${error}`);
 		} else {
-			// TODO: Deal with Data
+			var retrievedData = JSON.parse(stdout.substr(stdout.indexOf('\n') + 1));
+			console.log(retrievedData);
+			for (var j = 0; j < retrievedData.length; j++) {
+				saveData(id, retrievedData[j]);
+			}
+		}
+	});
+}
+
+function saveData(id, data) {
+	ExerciseDotCom.count({workoutId: data.id}, function (err, count) {
+		if (err) {
+			console.err(err);
+		}
+		else if (count === 0) {
+			// If workout is new, save to DB.
+			var newData = new ExerciseDotCom({
+				workoutId: data.id,
+				data: data,
+				dateRetrieved: Date.now(),
+				gamesUsed: [],
+				userId: id
+			});
+
+			newData.save();
 		}
 	});
 }
