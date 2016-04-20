@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var Workout = require('../models/workout');
-var ExerciseDotCom = require('../models/sources/exerciseDotCom');
+var ExerciseDotCom = require('../models/sources/exercise-dot-com');
 var User = require('../models/user')
-var xml = require('xml');
+var builder = require('xmlbuilder');
+var ObjectId = require('mongoose').Types.ObjectId;
 
 var passport = require('passport')
 var LocalStrategy = require('passport-local').Strategy;
@@ -52,22 +53,35 @@ router.get('/:id/workouts', function (req, res, next) {
   var userId = req.params.id;
   var from = req.query.from;
   var to = req.query.to;
+  var sendData = builder.create('data')
+    .ele('workouts');
   ExerciseDotCom.find({
-    'userId': userId,
-    'used': {
-      $not: true
-    }
+    //'id': new ObjectId(userId),
+    // 'used': {
+    //   $ne: true
+    // }
   }, function (err, workouts) {
     if (err) {
       res.send(err);
       return;
     }
+
     // Each unsent workout.
     for(var i in workouts) {
+      // console.log(workouts[i]);
+      sendData.ele('workout').ele({
+        syncDate: (new Date(Date.now())).toISOString(),
+        workoutDate: (new Date(workouts[i].data.workout_date)).toISOString(),
+        health: 100,
+        stamina: 100,
+        magicka: 100
+      }).up();
       workouts[i].used = true;
       workouts[i].save();
     }
-    res.send(xml(workouts));
+    var str = sendData.end({pretty: true});
+    console.log(str);
+    res.send(str);
   });
 });
 
