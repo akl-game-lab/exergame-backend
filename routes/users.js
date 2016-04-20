@@ -68,13 +68,33 @@ router.get('/:id/workouts', function (req, res, next) {
 
     // Each unsent workout.
     for(var i in workouts) {
+      var health = 0;
+      var stamina = 0;
+      var magicka = 0;
+
+      for (var j in workouts[i].data.workout_exercises) {
+        if (workouts[i].data.workout_exercises.hasOwnProperty(j)) {
+          var exerciseData = workouts[i].data.workout_exercises[j];
+          if (exerciseData.hasOwnProperty('total_reps') && exerciseData.total_reps > 0) {
+            // Health
+            health += exerciseData.total_points;
+          }
+          else if (exerciseData.hasOwnProperty('distance') && typeof parseFloat(exerciseData['distance']) === 'number' && parseFloat(exerciseData.distance) > 0) {
+            // Stamina
+            stamina += exerciseData.total_points;
+          } else {
+            // Magicka
+            magicka += exerciseData.total_points;
+          }
+        }
+      }
       // console.log(workouts[i]);
       sendData.ele('workout').ele({
         syncDate: (new Date(Date.now())).toISOString(),
         workoutDate: (new Date(workouts[i].data.workout_date)).toISOString(),
-        health: 100,
-        stamina: 100,
-        magicka: 100
+        health: health,
+        stamina: stamina,
+        magicka: magicka
       }).up();
       workouts[i].used = true;
       workouts[i].save();
