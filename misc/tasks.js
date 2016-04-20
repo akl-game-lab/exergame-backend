@@ -1,6 +1,6 @@
 var schedule = require('node-schedule');
 var User = require('../models/user');
-var ExerciseDotCom = require('../models/sources/exerciseDotCom');
+var ExerciseDotCom = require('../models/sources/exercise-dot-com');
 const exec = require('child_process').exec;
 
 process.argv.forEach(function(element) {
@@ -34,8 +34,8 @@ function getUserData() {
 
 
 function retrieveExerciseData(id, username, password) {
-	console.log(`casperjs exerciseDotCom.js --uname="${username}" --pword="${password}"`);
-	const child = exec(`pwd && casperjs exerciseDotCom.js --uname="${username}" --pword="${password}"`,
+	console.log(`casperjs exercise-dot-com.js --uname="${username}" --pword="${password}"`);
+	const child = exec(`pwd && casperjs exercise-dot-com.js --uname="${username}" --pword="${password}"`,
 	{
 		cwd: './misc/casper'
 	},
