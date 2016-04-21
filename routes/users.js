@@ -103,7 +103,7 @@ router.get('/:id/workouts/:from/:to', function (req, res, next) {
     }
 
     // Return XML.
-    res.send(sendData.end({pretty: true}););
+    res.send(sendData.end({pretty: true}));
   });
 });
 
