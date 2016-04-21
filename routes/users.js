@@ -53,25 +53,22 @@ router.get('/:id/workouts/:from/:to', function (req, res, next) {
   var userId = decodeURIComponent(req.params.id);
   var from = req.params.from;
   var to = req.params.to;
-  console.log(from);
-  console.log(to);
-  var sendData = builder.create('data')
-    .ele('workouts');
+  var sendData = builder.create('data').ele('workouts');
+
   ExerciseDotCom.find({
     userEmail: userId,
     dateRetrieved: {
       $gt: new Date(parseInt(from)),
       $lt: new Date(parseInt(to))
     }
-    // dateRetrieved: { $gt: new Date(1461200235423), $lt: new Date(1461200235425) }
   }, function (err, workouts) {
     if (err) {
       res.send(err);
       return;
     }
 
-    // Each unsent workout.
     for(var i in workouts) {
+      // Skyrim attributes, this will be generalised in the future so it can apply to more than one game.
       var health = 0;
       var stamina = 0;
       var magicka = 0;
@@ -80,19 +77,20 @@ router.get('/:id/workouts/:from/:to', function (req, res, next) {
         if (workouts[i].data.workout_exercises.hasOwnProperty(j)) {
           var exerciseData = workouts[i].data.workout_exercises[j];
           if (exerciseData.hasOwnProperty('total_reps') && exerciseData.total_reps > 0) {
-            // Health
+            // Exercise has reps, add points to health.
             health += exerciseData.total_points;
           }
           else if (exerciseData.hasOwnProperty('distance') && typeof parseFloat(exerciseData['distance']) === 'number' && parseFloat(exerciseData.distance) > 0) {
-            // Stamina
+            // Exercise has distance, add points to stamina
             stamina += exerciseData.total_points;
           } else {
-            // Magicka
+            // Otherwise, add points to magicka
             magicka += exerciseData.total_points;
           }
         }
       }
-      // console.log(workouts[i]);
+
+      // Build XML document.
       sendData.ele('workout').ele({
         syncDate: (new Date(Date.now())).toISOString(),
         workoutDate: (new Date(workouts[i].data.workout_date * 1000)).toISOString(),
@@ -103,9 +101,9 @@ router.get('/:id/workouts/:from/:to', function (req, res, next) {
       workouts[i].used = true;
       workouts[i].save();
     }
-    var str = sendData.end({pretty: true});
-    console.log(str);
-    res.send(str);
+
+    // Return XML.
+    res.send(sendData.end({pretty: true}););
   });
 });
 
