@@ -49,17 +49,21 @@ router.post('/login', passport.authenticate('local', {
   failureFlash: true
 }));
 
-router.get('/:id/workouts', function (req, res, next) {
+router.get('/:id/workouts/:from/:to', function (req, res, next) {
   var userId = decodeURIComponent(req.params.id);
-  var from = req.query.from;
-  var to = req.query.to;
+  var from = req.params.from;
+  var to = req.params.to;
+  console.log(from);
+  console.log(to);
   var sendData = builder.create('data')
     .ele('workouts');
   ExerciseDotCom.find({
-    'userEmail': userId,
-    // 'used': {
-    //   $ne: true
-    // }
+    userEmail: userId,
+    dateRetrieved: {
+      $gt: new Date(parseInt(from)),
+      $lt: new Date(parseInt(to))
+    }
+    // dateRetrieved: { $gt: new Date(1461200235423), $lt: new Date(1461200235425) }
   }, function (err, workouts) {
     if (err) {
       res.send(err);
