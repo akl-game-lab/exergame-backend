@@ -14,7 +14,7 @@ var dbConfig = require('./db');
 mongoose.connect(dbConfig.url);
 
 var routes = require('./routes/index');
-// var users = require('./routes/users');
+var users = require('./routes/users');
 // var workouts = require('./routes/workouts');
 
 var tasks = require('./misc/tasks');
@@ -41,7 +41,7 @@ app.use(flash());
 initPassport(passport);
 
 app.use('/', routes(passport));
-// app.use('/users', users);
+app.use('/users', users);
 // app.use('/workouts', workouts);
 
 // catch 404 and forward to error handler
