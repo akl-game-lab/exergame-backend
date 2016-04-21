@@ -22,7 +22,7 @@ function getUserData() {
 			for (var i = 0; i < users.length; i++) {
 				// If user has exercise.com credentials, run casper.
 				if (users[i].credentials.exerciseDotCom.username && users[i].credentials.exerciseDotCom.password) {
-					retrieveExerciseData(users[i].id, users[i].credentials.exerciseDotCom.username, users[i].credentials.exerciseDotCom.password);
+					retrieveExerciseData(users[i].email, users[i].credentials.exerciseDotCom.username, users[i].credentials.exerciseDotCom.password);
 				} else {
 					//temp
 					console.log(`User: ${users[i].email} has no exercise.com credentials`);
@@ -33,7 +33,7 @@ function getUserData() {
 }
 
 
-function retrieveExerciseData(id, username, password) {
+function retrieveExerciseData(email, username, password) {
 	console.log(`casperjs exercise-dot-com.js --uname="${username}" --pword="${password}"`);
 	const child = exec(`pwd && casperjs exercise-dot-com.js --uname="${username}" --pword="${password}"`,
 	{
@@ -48,13 +48,13 @@ function retrieveExerciseData(id, username, password) {
 			var retrievedData = JSON.parse(stdout.substr(stdout.indexOf('\n') + 1));
 			console.log(retrievedData);
 			for (var j = 0; j < retrievedData.length; j++) {
-				saveData(id, retrievedData[j]);
+				saveData(email, retrievedData[j]);
 			}
 		}
 	});
 }
 
-function saveData(id, data) {
+function saveData(email, data) {
 	ExerciseDotCom.count({workoutId: data.id}, function (err, count) {
 		if (err) {
 			console.err(err);
@@ -66,7 +66,7 @@ function saveData(id, data) {
 				data: data,
 				dateRetrieved: Date.now(),
 				gamesUsed: [],
-				userId: id
+				userEmail: email
 			});
 
 			newData.save();

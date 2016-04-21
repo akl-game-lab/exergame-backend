@@ -7,7 +7,7 @@ var ExerciseDotComSchema = new Schema({
   dateRetrieved: Date,
   gamesUsed: [Schema.Types.ObjectId],
   used: Boolean,
-  userId: Number
+  userEmail: String
 });
 
 module.exports = mongoose.model('ExerciseDotComExercises', ExerciseDotComSchema);

@@ -50,13 +50,13 @@ router.post('/login', passport.authenticate('local', {
 }));
 
 router.get('/:id/workouts', function (req, res, next) {
-  var userId = req.params.id;
+  var userId = decodeURIComponent(req.params.id);
   var from = req.query.from;
   var to = req.query.to;
   var sendData = builder.create('data')
     .ele('workouts');
   ExerciseDotCom.find({
-    //'id': new ObjectId(userId),
+    'userEmail': userId,
     // 'used': {
     //   $ne: true
     // }
@@ -91,7 +91,7 @@ router.get('/:id/workouts', function (req, res, next) {
       // console.log(workouts[i]);
       sendData.ele('workout').ele({
         syncDate: (new Date(Date.now())).toISOString(),
-        workoutDate: (new Date(workouts[i].data.workout_date)).toISOString(),
+        workoutDate: (new Date(workouts[i].data.workout_date * 1000)).toISOString(),
         health: health,
         stamina: stamina,
         magicka: magicka
