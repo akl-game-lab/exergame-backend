@@ -92,8 +92,8 @@ router.get('/:id/workouts/:from/:to', function (req, res, next) {
 
       // Build XML document.
       sendData.ele('workout').ele({
-        syncDate: (new Date(Date.now())).toISOString(),
-        workoutDate: (new Date(workouts[i].data.workout_date * 1000)).toISOString(),
+        syncDate: (new Date(Date.now())).valueOf(),
+        workoutDate: (new Date(workouts[i].data.workout_date * 1000)).valueOf(),
         health: health,
         stamina: stamina,
         magicka: magicka
