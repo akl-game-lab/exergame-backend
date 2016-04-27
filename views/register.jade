@@ -3,15 +3,15 @@ extends layout
 block content
 	div.container
 		h1 Registration Details
-			div
-				form(class='form-signin', action='/signup', method='POST')
-					input(type='text', name='username', class='form-control', placeholder='Username',required, autofocus)
-					input(type='password', name='password', class='form-control nomargin', placeholder='Password', required)
-					input(type='email', name='email', class='form-control', placeholder='Email',required)
-					input(type='text', name='firstName', class='form-control', placeholder='First Name',required)
-					input(type='text', name='lastName', class='form-control', placeholder='Last Name',required)
-					button(class='btn btn-lg btn-primary btn-block', type='submit') Register
-					span.clearfix
+		div
+			form(class='form-signin', action='/signup', method='POST')
+				input(type='text', name='username', class='form-control', placeholder='Username',required, autofocus)
+				input(type='password', name='password', class='form-control nomargin', placeholder='Password', required)
+				input(type='email', name='email', class='form-control', placeholder='Email',required)
+				input(type='text', name='firstName', class='form-control', placeholder='First Name',required)
+				input(type='text', name='lastName', class='form-control', placeholder='Last Name',required)
+				button(class='btn btn-lg btn-primary btn-block', type='submit') Register
+				span.clearfix
 			#message
 				if message
 					h1.text-center.error-message #{message}
