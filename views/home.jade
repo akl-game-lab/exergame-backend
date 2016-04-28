@@ -4,6 +4,10 @@ block content
 	div.container
 		#user
 			h1 Welcome #{user.firstName}.
+			if successMessage
+				div.alert.alert-success #{successMessage}
+			if errorMessage
+				div.alert.alert-danger #{errorMessage}
 			div(class='btn-group')
 				button(type='button', class='btn btn-primary dropdown-toggle', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Register Tracker
 					span(class='caret')
