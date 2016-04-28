@@ -16,7 +16,7 @@ module.exports = function(passport){
 
 	/* GET login page. */
 	router.get('/', function(req, res) {
-    	// Display the Login page with any flash message, if any
+		// Display the Login page with any flash message, if any
 		res.render('index', { message: req.flash('message') });
 	});
 
@@ -86,7 +86,6 @@ module.exports = function(passport){
 		// req.user.credentials.exerciseDotCom.username = req.body.credentials.exerciseDotCom.username || undefined;
 		// req.user.credentials.exerciseDotCom.password = req.body.credentials.exerciseDotCom.password || undefined;
 	});
-
 
 	return router;
 }

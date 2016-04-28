@@ -3,10 +3,14 @@ extends layout
 block content
 	div.container
 		#user
-			h1 Welcome #{user.firstName}. Check your details below:
-					ul.user-details
-						li Username ---> #{user.username}
-						li Email    ---> #{user.email}
-						li First Name ---> #{user.firstName} 
-						li Last Name ---> #{user.lastName}
-				a(href='/signout', class='text-center new-account') Sign Out
+			h1 Welcome #{user.firstName}.
+			div(class='btn-group')
+				button(type='button', class='btn btn-primary dropdown-toggle', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Register Tracker
+					span(class='caret')
+				ul(class='dropdown-menu')
+					li
+						a(href='/settings') Exercise.com
+					li
+						a(href='#') More coming soon!
+			div
+				a(href='/signout', class='btn btn-danger sign-out') Sign Out
