@@ -41,7 +41,11 @@ module.exports = function(passport){
 
 	/* GET Home Page */
 	router.get('/home', isAuthenticated, function(req, res){
-		res.render('home', { user: req.user });
+		res.render('home', {
+			user: req.user,
+			successMessage: req.query.successMessage,
+			errorMessage: req.query.errorMessage
+		});
 	});
 
 	/* Handle Logout */
@@ -73,7 +77,7 @@ module.exports = function(passport){
 					console.log("Exercise.com account does not exist");
 					res.render('settings', {
 						user: req.user,
-						message: "Exercise.com account does not exist"
+						errorMessage: "Exercise.com account does not exist!"
 					});
 					return;
 			}
@@ -83,7 +87,7 @@ module.exports = function(passport){
 					console.error(err);
 				}
 				console.log("Exercise.com account verfied");
-				res.redirect('/home');
+				res.redirect('/home?successMessage=Account registration successful!');
 			});
 		});
 		// req.user.credentials.exerciseDotCom.username = req.body.credentials.exerciseDotCom.username || undefined;
