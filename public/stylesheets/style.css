@@ -2,6 +2,10 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
 }
 
-a {
+form > input {
+  margin-bottom: 4px;
+}
 
+.btn {
+  margin-bottom: 8px;
 }
