@@ -1,8 +1,11 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
-a {
-  color: #00B7FF;
+form > input {
+  margin-bottom: 4px;
+}
+
+.btn {
+  margin-bottom: 8px;
 }
