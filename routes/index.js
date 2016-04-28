@@ -74,10 +74,10 @@ module.exports = function(passport){
 
 		verifyTask.verifyExerciseDotCom(username, password, function (execReturnVal) {
 			if(execReturnVal.indexOf(errorString) > -1) {
-					console.log("Exercise.com account does not exist");
+					console.log('Exercise.com account does not exist');
 					res.render('settings', {
 						user: req.user,
-						errorMessage: "Exercise.com account does not exist!"
+						errorMessage: 'Exercise.com account does not exist!'
 					});
 					return;
 			}
@@ -86,7 +86,7 @@ module.exports = function(passport){
 					//@TODO: better way to tell users about errors.
 					console.error(err);
 				}
-				console.log("Exercise.com account verfied");
+				console.log('Exercise.com account verfied');
 				res.redirect('/home?successMessage=Account registration successful!');
 			});
 		});
