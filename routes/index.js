@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var verifyTask = require('../misc/verify-task');
 
 var isAuthenticated = function (req, res, next) {
 	// if user is authenticated in the session, call the next() to call the next request handler
@@ -55,18 +56,32 @@ module.exports = function(passport){
 	});
 
 	router.post('/settings', isAuthenticated, function (req, res) {
+		var username = req.body['credentials.exerciseDotCom.username'] || undefined;
+		var password = req.body['credentials.exerciseDotCom.password'] || undefined;
+
 		req.user.credentials = {
 			exerciseDotCom: {
-				username: req.body['credentials.exerciseDotCom.username'] || undefined,
-				password: req.body['credentials.exerciseDotCom.password'] || undefined
+				username: username,
+				password: password
 			}
 		};
-		req.user.save(function (err) {
-			if (err) {
-				//@TODO: better way to tell users about errors.
-				console.error(err);
+
+		var errorString = 'You need to sign in or sign up before continuing.';
+
+		verifyTask.verifyExerciseDotCom(username, password, function (execReturnVal) {
+			if(execReturnVal.indexOf(errorString) > -1) {
+					console.log("Exercise.com account does not exist");
+					res.redirect('/home');
+					return;
 			}
-			res.redirect('/home');
+			req.user.save(function (err) {
+				if (err) {
+					//@TODO: better way to tell users about errors.
+					console.error(err);
+				}
+				console.log("Exercise.com account verfied");
+				res.redirect('/home');
+			});
 		});
 		// req.user.credentials.exerciseDotCom.username = req.body.credentials.exerciseDotCom.username || undefined;
 		// req.user.credentials.exerciseDotCom.password = req.body.credentials.exerciseDotCom.password || undefined;
