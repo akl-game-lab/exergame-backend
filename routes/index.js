@@ -71,7 +71,10 @@ module.exports = function(passport){
 		verifyTask.verifyExerciseDotCom(username, password, function (execReturnVal) {
 			if(execReturnVal.indexOf(errorString) > -1) {
 					console.log("Exercise.com account does not exist");
-					res.redirect('/home');
+					res.render('settings', {
+						user: req.user,
+						message: "Exercise.com account does not exist"
+					});
 					return;
 			}
 			req.user.save(function (err) {
