@@ -51,15 +51,15 @@ router.post('/login', passport.authenticate('local', {
 
 router.get('/:id/workouts/:from/:to', function (req, res, next) {
   var userId = decodeURIComponent(req.params.id);
-  var from = req.params.from;
-  var to = req.params.to;
+  var from = req.params.from; // In seconds for Skyrim
+  var to = req.params.to; // In seconds for Skyrim
   var sendData = builder.create('data').ele('workouts');
 
   ExerciseDotCom.find({
     userEmail: userId,
     dateRetrieved: {
-      $gt: new Date(parseInt(from)),
-      $lt: new Date(parseInt(to))
+      $gt: new Date(parseInt(from) * 1000),
+      $lt: new Date(parseInt(to) * 1000)
     }
   }, function (err, workouts) {
     if (err) {
@@ -92,8 +92,8 @@ router.get('/:id/workouts/:from/:to', function (req, res, next) {
 
       // Build XML document.
       sendData.ele('workout').ele({
-        syncDate: (new Date(Date.now())).valueOf(),
-        workoutDate: (new Date(workouts[i].data.workout_date)).valueOf(),
+        syncDate: Math.floor((new Date(Date.now())).valueOf() / 1000), // seconds
+        workoutDate: workouts[i].data.workout_date, //seconds
         health: health,
         stamina: stamina,
         magicka: magicka
