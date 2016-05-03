@@ -32,8 +32,24 @@ function getUserData() {
 	});
 }
 
+function getUserDataByEmail(email, callback) {
+	User.findOne({email: email}, function (err, user) {
+		console.log('Grabbed data for ' + email); // TODO Remove
+		if (err) {
+			console.error(err);
+		} else {
+			// If user has exercise.com credentials, run casper.
+			if (user.credentials.exerciseDotCom.username && user.credentials.exerciseDotCom.password) {
+				retrieveExerciseData(user.email, user.credentials.exerciseDotCom.username, user.credentials.exerciseDotCom.password, callback);
+			} else {
+				//temp
+				console.log(`User: ${user.email} has no exercise.com credentials`);
+			}
+		}
+	});
+}
 
-function retrieveExerciseData(email, username, password) {
+function retrieveExerciseData(email, username, password, callback) {
 	console.log(`casperjs exercise-dot-com.js --uname="${username}" --pword="${password}"`);
 	const child = exec(`pwd && casperjs exercise-dot-com.js --uname="${username}" --pword="${password}"`,
 	{
@@ -51,30 +67,45 @@ function retrieveExerciseData(email, username, password) {
 				console.error(retrievedData['error']);
 			}
 			else {
-				for (var j = 0; j < retrievedData.length; j++) {
-					saveData(email, retrievedData[j]);
-				}
+				saveData(email, retrievedData, callback);
 			}
 		}
 	});
 }
 
 function saveData(email, data) {
-	ExerciseDotCom.count({workoutId: data.id}, function (err, count) {
-		if (err) {
-			console.err(err);
-		}
-		else if (count === 0) {
-			// If workout is new, save to DB.
-			var newData = new ExerciseDotCom({
-				workoutId: data.id,
-				data: data,
-				dateRetrieved: Date.now(),
-				gamesUsed: [],
-				userEmail: email
-			});
+	var savedCount = 0;
+	for (var i = 0; i < data.length; i++) {
+		ExerciseDotCom.count({workoutId: data[i].id}, function (err, count) {
+			if (err) {
+				console.err(err);
+			}
+			else if (count === 0) {
+				// If workout is new, save to DB.
+				var newData = new ExerciseDotCom({
+					workoutId: data[i].id,
+					data: data[i],
+					dateRetrieved: Date.now(),
+					gamesUsed: [],
+					userEmail: email
+				});
 
-			newData.save();
-		}
-	});
+				newData.save(function (err) {
+					savedCount++;
+					if (err) {
+						//?
+					} else {
+						if (savedCount == data.length) {
+							callback && callback();
+							console.log('callback called');
+						}
+					}
+				});
+			}
+		});
+	}
 }
+
+module.exports = function (email, callback) {
+	getUserDataByEmail(email, callback);
+};
