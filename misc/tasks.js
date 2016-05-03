@@ -43,12 +43,17 @@ function retrieveExerciseData(email, username, password) {
 		console.log(`stdout: ${stdout}`);
 		console.log(`stderr: ${stderr}`);
 		if (error !== null) {
-			console.log(`exec error: ${error}`);
+			console.error(`exec error: ${error}`);
 		} else {
-			var retrievedData = JSON.parse(stdout.substr(stdout.indexOf('\n') + 1));
+			var retrievedData = JSON.parse(stdout.substr(stdout.search(/[\{\[]/))); // Find start of json.
 			console.log(retrievedData);
-			for (var j = 0; j < retrievedData.length; j++) {
-				saveData(email, retrievedData[j]);
+			if (retrievedData.hasOwnProperty('error')) {
+				console.error(retrievedData['error']);
+			}
+			else {
+				for (var j = 0; j < retrievedData.length; j++) {
+					saveData(email, retrievedData[j]);
+				}
 			}
 		}
 	});
