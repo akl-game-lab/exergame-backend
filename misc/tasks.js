@@ -3,14 +3,14 @@ var User = require('../models/user');
 var ExerciseDotCom = require('../models/sources/exercise-dot-com');
 const exec = require('child_process').exec;
 
-process.argv.forEach(function(element) {
-	if(element === '--force') {
+process.argv.forEach(function (element) {
+	if (element === '--force') {
 		getUserData();
 	}
 });
 
 // Run every hour
-schedule.scheduleJob({minute: [0, 20, 40]}, function () {
+schedule.scheduleJob({ minute: [0, 20, 40] }, function () {
 	getUserData();
 });
 
@@ -33,7 +33,7 @@ function getUserData() {
 }
 
 function getUserDataByEmail(email, callback) {
-	User.findOne({email: email}, function (err, user) {
+	User.findOne({ email: email }, function (err, user) {
 		console.log('Grabbed data for ' + email); // TODO Remove
 		if (err) {
 			console.error(err);
@@ -66,8 +66,7 @@ function retrieveExerciseData(email, username, password, callback) {
 			console.log(retrievedData);
 			if (retrievedData.hasOwnProperty('error')) {
 				console.error(retrievedData.error);
-			}
-			else {
+			} else {
 				saveData(email, retrievedData, callback);
 			}
 		}
@@ -81,11 +80,10 @@ function saveData(email, data) {
 }
 
 function saveWorkout(email, data) {
-	ExerciseDotCom.count({workoutId: data.id}, function (err, count) {
+	ExerciseDotCom.count({ workoutId: data.id }, function (err, count) {
 		if (err) {
 			console.error(err);
-		}
-		else if (count === 0) {
+		} else if (count === 0) {
 			// If workout is new, save to DB.
 			var newData = new ExerciseDotCom({
 				workoutId: data.id,

@@ -1,0 +1,13 @@
+{
+  "preset": "airbnb",
+  "disallowMixedSpacesAndTabs": true,
+  "validateIndentation": "\t",
+  "requireTrailingComma": false,
+  "requirePaddingNewLinesBeforeLineComments": false,
+  "disallowTrailingComma": true,
+  "maximumLineLength": 200,
+  "excludeFiles": [
+    "node_modules/**",
+    "misc/casper/**"
+  ]
+}

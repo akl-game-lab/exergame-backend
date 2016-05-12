@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var WorkoutSchema = new Schema({
 	gameId: Schema.Types.ObjectId,
 	userId: Schema.Types.ObjectId,
-	workoutDate: {type: Date, default: Date.now},
+	workoutDate: { type: Date, default: Date.now },
 	totalPoints: Number,
 	health: Number,
 	stamina: Number,
