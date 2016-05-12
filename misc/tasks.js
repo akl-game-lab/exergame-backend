@@ -62,9 +62,10 @@ function retrieveExerciseData(email, username, password, callback) {
 			console.error(`exec error: ${error}`);
 		} else {
 			var retrievedData = JSON.parse(stdout.substr(stdout.search(/[\{\[]/))); // Find start of json.
+			console.log('Retrieved exercise data, saving...');
 			console.log(retrievedData);
 			if (retrievedData.hasOwnProperty('error')) {
-				console.error(retrievedData['error']);
+				console.error(retrievedData.error);
 			}
 			else {
 				saveData(email, retrievedData, callback);
@@ -74,11 +75,7 @@ function retrieveExerciseData(email, username, password, callback) {
 }
 
 function saveData(email, data) {
-	// console.log('data = ');
-	// console.log(data);
 	for (var i = 0; i < data.length; i++) {
-		// console.log('data[' + i + '] =');
-		// console.log(data[i]);
 		saveWorkout(email, data[i]);
 	}
 }
@@ -86,7 +83,7 @@ function saveData(email, data) {
 function saveWorkout(email, data) {
 	ExerciseDotCom.count({workoutId: data.id}, function (err, count) {
 		if (err) {
-			console.err(err);
+			console.error(err);
 		}
 		else if (count === 0) {
 			// If workout is new, save to DB.
@@ -102,7 +99,7 @@ function saveWorkout(email, data) {
 				if (err) {
 					console.error(err);
 				} else {
-					console.log('Workout saved.');
+					console.log('Workout saved');
 				}
 			});
 		}
