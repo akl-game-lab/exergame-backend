@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 var Workout = require('../models/workout');
 var ExerciseDotCom = require('../models/sources/exercise-dot-com');
-var User = require('../models/user')
+var User = require('../models/user');
+var getByEmail = require('../misc/tasks');
 var builder = require('xmlbuilder');
 var ObjectId = require('mongoose').Types.ObjectId;
 
@@ -48,6 +49,13 @@ router.post('/login', passport.authenticate('local', {
   failureRedirect: '/login',
   failureFlash: true
 }));
+
+router.get('/:id/forceUpdate', function (req, res, next) {
+  var userId = decodeURIComponent(req.params.id);
+
+  getByEmail(userId);
+  res.send(builder.create('data').ele({started: true}).end({pretty: true}));
+})
 
 router.get('/:id/workouts/:from/:to', function (req, res, next) {
   var userId = decodeURIComponent(req.params.id);
@@ -118,7 +126,7 @@ router.get('/:id/workouts/:from/:to', function (req, res, next) {
         res.send(sendData.end({pretty: true}));
       });
     }
-  })
+  });
 });
 
 module.exports = router;
