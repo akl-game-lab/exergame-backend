@@ -7,7 +7,7 @@ var getByEmail = require('../misc/tasks');
 var builder = require('xmlbuilder');
 var ObjectId = require('mongoose').Types.ObjectId;
 
-var passport = require('passport')
+var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 passport.use(new LocalStrategy(
@@ -55,7 +55,7 @@ router.get('/:id/forceUpdate', function (req, res, next) {
 
   getByEmail(userId);
   res.send(builder.create('data').ele({started: true}).end({pretty: true}));
-})
+});
 
 router.get('/:id/workouts/:from/:to', function (req, res, next) {
   var userId = decodeURIComponent(req.params.id);
@@ -68,8 +68,8 @@ router.get('/:id/workouts/:from/:to', function (req, res, next) {
   }, function (err, users) {
     if(users.length === 0){
       sendData.ele({
-          errorCode: "404",
-          errorMessage: "User not found"
+          errorCode: '404',
+          errorMessage: 'User not found'
       });
       res.status(404).send(sendData.end({ pretty: true}));
     } else {
@@ -101,7 +101,7 @@ router.get('/:id/workouts/:from/:to', function (req, res, next) {
                 // Exercise has reps, add points to health.
                 health += exerciseData.total_points;
               }
-              else if (exerciseData.hasOwnProperty('distance') && typeof parseFloat(exerciseData['distance']) === 'number' && parseFloat(exerciseData.distance) > 0) {
+              else if (exerciseData.hasOwnProperty('distance') && typeof parseFloat(exerciseData.distance) === 'number' && parseFloat(exerciseData.distance) > 0) {
                 // Exercise has distance, add points to stamina
                 stamina += exerciseData.total_points;
               } else {

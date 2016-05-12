@@ -1,0 +1,15 @@
+{
+  "node": true,
+  "esversion": 6,
+  "bitwise": true,
+  "curly": true,
+  "eqeqeq": true,
+  "immed": true,
+  "latedef": false,
+  "newcap": true,
+  "noarg": true,
+  "quotmark": "single",
+  "regexp": true,
+  "undef": true,
+  "validthis": true
+}
