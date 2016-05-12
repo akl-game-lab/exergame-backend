@@ -74,36 +74,39 @@ function retrieveExerciseData(email, username, password, callback) {
 }
 
 function saveData(email, data) {
-	var savedCount = 0;
+	// console.log('data = ');
+	// console.log(data);
 	for (var i = 0; i < data.length; i++) {
-		ExerciseDotCom.count({workoutId: data[i].id}, function (err, count) {
-			if (err) {
-				console.err(err);
-			}
-			else if (count === 0) {
-				// If workout is new, save to DB.
-				var newData = new ExerciseDotCom({
-					workoutId: data[i].id,
-					data: data[i],
-					dateRetrieved: Date.now(),
-					gamesUsed: [],
-					userEmail: email
-				});
-
-				newData.save(function (err) {
-					savedCount++;
-					if (err) {
-						//?
-					} else {
-						if (savedCount == data.length) {
-							callback && callback();
-							console.log('callback called');
-						}
-					}
-				});
-			}
-		});
+		// console.log('data[' + i + '] =');
+		// console.log(data[i]);
+		saveWorkout(email, data[i]);
 	}
+}
+
+function saveWorkout(email, data) {
+	ExerciseDotCom.count({workoutId: data.id}, function (err, count) {
+		if (err) {
+			console.err(err);
+		}
+		else if (count === 0) {
+			// If workout is new, save to DB.
+			var newData = new ExerciseDotCom({
+				workoutId: data.id,
+				data: data,
+				dateRetrieved: Date.now(),
+				gamesUsed: [],
+				userEmail: email
+			});
+
+			newData.save(function (err) {
+				if (err) {
+					console.error(err);
+				} else {
+					console.log('Workout saved.');
+				}
+			});
+		}
+	});
 }
 
 module.exports = function (email, callback) {

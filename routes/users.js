@@ -54,9 +54,7 @@ router.get('/:id/forceUpdate', function (req, res, next) {
   var userId = decodeURIComponent(req.params.id);
 
   getByEmail(userId);
-  res.send({
-    started: true
-  });
+  res.send(builder.create('data').ele({started: true}).end({pretty: true}));
 })
 
 router.get('/:id/workouts/:from/:to', function (req, res, next) {
