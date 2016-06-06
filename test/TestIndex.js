@@ -2,9 +2,11 @@ var assert = require('assert');
 var request = require('supertest');
 var mongoose = require('mongoose');
 var http = require('http');
+var bCrypt = require('bcrypt-nodejs');
 
 var server = require('../index');
 var db = require('../db');
+var User = require('../models/user');
 
 describe('Index', function() {
 	var url = 'http://localhost:3000';
@@ -17,6 +19,13 @@ describe('Index', function() {
 		// mongoose.connect(db.testUrl);
 		done();
 	});
+
+	after(function (done) {
+		User.remove({firstName: 'Test'}, function () {
+			done();
+		});
+	});
+
 	// use describe to give a title to your test suite, in this case the tile is "Account"
 	// and then specify a function in which we are going to declare all the tests
 	// we want to run. Each test starts with the function it() and as a first argument
@@ -36,6 +45,41 @@ describe('Index', function() {
 				assert.equal(res.status, 200, 'request returned an error');
 
 				done();
+			});
+		});
+
+		it('should create a new user when a post is made', function (done) {
+			var data = {
+				username: 'TestUser',
+				password: 'TestPassword',
+				email: 'test@example.com',
+				firstName: 'Test',
+				lastName: 'User'
+			}
+
+			request(url)
+			.post('/signup')
+			.send(data)
+			.end(function (err, res) {
+				assert.ifError(err);
+
+				assert.equal(res.status, 302, 'request returned an error');
+				assert.equal(res.text, 'Found. Redirecting to /home');
+
+				// Check user was created
+				User.find({firstName: 'Test'}, function (err, results) {
+					assert.ifError(err);
+
+					assert.equal(results.length, 1);
+
+					assert.equal(results[0].username, 'TestUser');
+					assert.ok(bCrypt.compareSync('TestPassword', results[0].password));
+					assert.equal(results[0].email, 'test@example.com');
+					assert.equal(results[0].firstName, 'Test');
+					assert.equal(results[0].lastName, 'User');
+
+					done();
+				});
 			});
 		});
 
