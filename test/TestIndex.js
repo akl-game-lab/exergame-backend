@@ -16,8 +16,17 @@ describe('Index', function() {
 		server();
 
 		// In our tests we use the test db
-		// mongoose.connect(db.testUrl);
-		done();
+		mongoose.connection.close(function (err) {
+			if (err) {
+				console.error(err);
+			}
+			mongoose.connect(db.testUrl, function (err) {
+				if (err) {
+					console.error(err);
+				}
+				done();
+			});
+		});
 	});
 
 	after(function (done) {
