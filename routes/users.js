@@ -89,7 +89,7 @@ router.get('/:id/workouts/:from/:to', function (req, res, next) {
 					return;
 				}
 
-				sendData.ele('workouts');
+				sendData = sendData.ele('workouts');
 
 				for (var i in workouts) {
 					// Skyrim attributes, this will be generalised in the future so it can apply to more than one game.
