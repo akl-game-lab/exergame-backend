@@ -92,6 +92,61 @@ describe('Index', function() {
 			});
 		});
 
+		it('should fail when given a user that already exists', function (done) {
+			var data = {
+				username: 'TestUser',
+				password: 'TestPassword',
+				email: 'test@example.com',
+				firstName: 'Test2',
+				lastName: 'User'
+			}
+
+			request(url)
+			.post('/signup')
+			.send(data)
+			.end(function (err, res) {
+				assert.ifError(err);
+
+				assert.equal(res.status, 302, 'request returned an error');
+				assert.equal(res.text, 'Found. Redirecting to /signup');
+
+				// Check no user was created
+				User.find({firstName: 'Test2'}, function (err, results) {
+					assert.ifError(err);
+
+					assert.equal(results.length, 0);
+					done();
+				});
+			});
+		});
+
+		it('should fail when given invalid data', function (done) {
+			var data = {
+				password: 'TestPassword',
+				email: 'test3@example.com',
+				firstName: 'Test3',
+				lastName: 'User'
+			}
+
+			request(url)
+			.post('/signup')
+			.send(data)
+			.end(function (err, res) {
+				assert.ifError(err);
+
+				assert.equal(res.status, 302, 'request returned an error');
+				assert.equal(res.text, 'Found. Redirecting to /signup');
+
+				// Check no user was created
+				User.find({firstName: 'Test3'}, function (err, results) {
+					assert.ifError(err);
+
+					assert.equal(results.length, 0);
+					done();
+				});
+			});
+		});
+
 		// it('should correctly update an existing account', function(done){
 		// 	var body = {
 		// 		firstName: 'JP',
