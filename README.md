@@ -1,6 +1,6 @@
 # exergaming-backend
 
-[![Dependency Status](https://david-dm.org/akl-game-lab/exergame-backend.svg)](https://david-dm.org/akl-game-lab/exergame-backend)
+[![Build Status](https://travis-ci.org/akl-game-lab/exergame-backend.svg?branch=master)](https://travis-ci.org/akl-game-lab/exergame-backend.svg) [![Dependency Status](https://david-dm.org/akl-game-lab/exergame-backend.svg)](https://david-dm.org/akl-game-lab/exergame-backend)
 
 Gathers data from fitness tracking services and exposes it for use in video games.
 
