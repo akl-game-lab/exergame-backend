@@ -99,7 +99,7 @@ describe('Index', function() {
 				email: 'test@example.com',
 				firstName: 'Test2',
 				lastName: 'User'
-			}
+			};
 
 			request(url)
 			.post('/signup')
@@ -126,7 +126,7 @@ describe('Index', function() {
 				email: 'test3@example.com',
 				firstName: 'Test3',
 				lastName: 'User'
-			}
+			};
 
 			request(url)
 			.post('/signup')
@@ -145,6 +145,84 @@ describe('Index', function() {
 					done();
 				});
 			});
+		});
+
+		it('should unsuccessfully log in due to incorrect password', function(done)	{
+			var loginData = {
+				password: 'badPassword',
+				username: 'TestUser'
+			};
+
+			request(url)
+			.post('/login')
+			.send(loginData)
+			.end(function (err, res) {
+				assert.ifError(err);
+				//failed login redirects to /
+				assert.equal(res.text, 'Found. Redirecting to /');
+				done();
+			});
+		});
+
+		it('should unsuccessfully log in due to invalid username', function(done)	{
+			var loginData = {
+				password: 'TestPassword',
+				username: 'badUser'
+			};
+
+			request(url)
+			.post('/login')
+			.send(loginData)
+			.end(function (err, res) {
+				assert.ifError(err);
+				//failed login redirects to /
+				assert.equal(res.text, 'Found. Redirecting to /');
+				done();
+			});
+		});
+
+		it('should successfully log in', function(done)	{
+
+			var loginData = {
+				password: 'TestPassword',
+				username: 'TestUser'
+			};
+
+			request(url)
+			.post('/login')
+			.send(loginData)
+			.end(function (err, res) {
+				assert.ifError(err);
+				//successful login redirects to home
+				assert.equal(res.text, 'Found. Redirecting to /home');
+				done();
+			});
+		})
+
+		it('should successfully log out', function (done)	{
+			var loginData = {
+				password: 'TestPassword',
+				username: 'TestUser'
+			};
+
+			request(url)
+			.post('/login')
+			.send(loginData)
+			.end(function (err, res) {
+				assert.ifError(err);
+				//successful login redirects to home
+				assert.equal(res.text, 'Found. Redirecting to /home')
+
+				request(url)
+				.get('/signout')
+				.end(function (err, res) {
+					assert.ifError(err);
+
+					assert.equal(res.text, 'Found. Redirecting to /');
+					done();
+				});
+			});
+
 		});
 
 		// it('should correctly update an existing account', function(done){
