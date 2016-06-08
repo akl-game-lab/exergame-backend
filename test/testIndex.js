@@ -229,7 +229,7 @@ describe('Index', function() {
 			.get('/signout')
 			.end(function (err, res) {
 
-				var r = request(url)
+				request(url)
 				.get('/home')
 				.end(function (err, res) {
 				  assert.equal(res.text, 'Found. Redirecting to /');
