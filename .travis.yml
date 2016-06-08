@@ -1,9 +1,12 @@
 language: node_js
 before_install:
-  - wget https://s3-ap-southeast-2.amazonaws.com/exergaming-ci/phantomjs-2.1.1-linux-x86_64.tar.bz2
-  - tar jxf phantomjs-2.1.1-linux-x86_64.tar.bz2
-  - export PATH=$PATH:$PWD/phantomjs-2.1.1-linux-x86_64/bin
-  - npm install -g casperjs
-  - npm install -g mocha
+- wget https://s3-ap-southeast-2.amazonaws.com/exergaming-ci/phantomjs-2.1.1-linux-x86_64.tar.bz2
+- tar jxf phantomjs-2.1.1-linux-x86_64.tar.bz2
+- export PATH=$PATH:$PWD/phantomjs-2.1.1-linux-x86_64/bin
+- npm install -g casperjs
+- npm install -g mocha
 services:
-  - mongodb
+- mongodb
+notifications:
+  slack:
+    secure: RXaF6vP29JBaNChQ50hqSDOMzTGiNRKa1/l3QXx0KNPJIhkMDEShXTOZ/VgRil0QVojgRz0IgbrwU8eDjfZJR7c5xHl5OifbCfH8nsVzJgP7KZfvfhN3YXzFEkpN18lk/J2fcovKpzB+KSyj/blPIrZPHU98dcCy4F6vrT2KGZ5aPNyRY1IgNuVOHgqx2F6QuV7ucTnTNJ3/OrTw9P22BYkF58NBjste45wsiZ47arssOJL2gAeszBTOej2jrPAId+A4jyahdQY8FoLLF+J2tRNQdbx8hIA2jOOnu/IYCqhWmAo3cJokn4x7jAkbX+yzqfRpNeLiytRKrQTYCaFIna7ly5Pg1SVL0fl+6/R2S8Jfuc+srDTm2S74WHBTmKDt/UUb87bCClawK4Ng/Wk/U9L6rzLIt0VIemOs6HFekW2dg1lCPtMJrswzqPbdJ7zyE27q5KWcmJinuRAm2qE46xyDYjWXsu1LbmfV9U29KigsYcez5OAh5dSmPjUBYjmc4RfSu3Ms1iT6wi/9sOIBEgYPveZ7lnr6NJkPj43rcyCvohD/Wju+rDKsEFYHSUgE6OkFI+HFN7LjDpXs5W/bX+q/QqeTS/kh8wqt66QRpdc3d4tORcowSF4+uYdJzZETXU3UzYJx0V/OcUXFCrFODvKQGdu7jU18HbSbfjUGTvo=
