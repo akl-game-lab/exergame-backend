@@ -224,7 +224,7 @@ describe('Index', function() {
 			});
 		});
 
-		it('should unsuccessfully navigate to home', function (done) {
+		it('should unsuccessfully navigate to home if user not logged in', function (done) {
 			request(url)
 			.get('/signout')
 			.end(function (err, res) {
