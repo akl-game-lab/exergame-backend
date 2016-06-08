@@ -22,15 +22,22 @@ describe('/users', function() {
 				if (err) {
 					console.error(err);
 				}
+
+				// Populate Database
 				var dummyUser = new User({
-					username: 'example%40example.com',
+					username: 'example@example.com',
 					password: 'f$1-ien-J9J-0Pb',
-					email: 'example%40example.com',
+					email: 'example@example.com',
 					firstName: 'Test',
 					lastName: 'User',
 					credentials: {}
-				})
-				done();
+				});
+				dummyUser.save(function (err) {
+					if(err) {
+						console.error(err);
+					}
+					done();
+				});
 			});
 		});
 	});
@@ -42,6 +49,25 @@ describe('/users', function() {
 	});
 
 	describe('/{id}/workouts/{from}/{to}', function() {
+		it('should return an empty workouts xml if the user exists but has no data.', function(done) {
+			// Make the request
+			request(url)
+			.get('/users/example%40example.com/workouts/0/9999999999999')
+			// end handles the response
+			.end(function(err, res) {
+				assert.ifError(err);
+
+				assert.equal(res.status, 200, 'request returned an error');
+
+				parseString(res.text, function (err, data) {
+					assert.deepEqual(data.data, {
+						workouts: [''],
+					});
+					done();
+				});
+			});
+		});
+
 		it('should return a 404 error if the user does not exist', function(done) {
 			// Make the request
 			request(url)
