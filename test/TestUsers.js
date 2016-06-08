@@ -129,6 +129,66 @@ describe('/users', function() {
 			});
 		});
 
+		it('should return 400 if the user exists but from date is invalid', function(done) {
+			// Make the request
+			request(url)
+			.get('/users/example%40example.com/workouts/-1/100')
+			// end handles the response
+			.end(function(err, res) {
+				assert.ifError(err);
+
+				assert.equal(res.status, 400, 'request returned an error');
+
+				parseString(res.text, function (err, data) {
+					assert.deepEqual(data.data, {
+						errorCode: ['400'],
+						errorMessage: ['Invalid date(s)']
+					});
+					done();
+				});
+			});
+		});
+
+		it('should return 400 if the user exists but to date is invalid', function(done) {
+			// Make the request
+			request(url)
+			.get('/users/example%40example.com/workouts/100/word')
+			// end handles the response
+			.end(function(err, res) {
+				assert.ifError(err);
+
+				assert.equal(res.status, 400, 'request returned an error');
+
+				parseString(res.text, function (err, data) {
+					assert.deepEqual(data.data, {
+						errorCode: ['400'],
+						errorMessage: ['Invalid date(s)']
+					});
+					done();
+				});
+			});
+		});
+
+		it('should return 400 if the user exists but from dates are not in order', function(done) {
+			// Make the request
+			request(url)
+			.get('/users/example%40example.com/workouts/100/50')
+			// end handles the response
+			.end(function(err, res) {
+				assert.ifError(err);
+
+				assert.equal(res.status, 400, 'request returned an error');
+
+				parseString(res.text, function (err, data) {
+					assert.deepEqual(data.data, {
+						errorCode: ['400'],
+						errorMessage: ['Invalid date(s)']
+					});
+					done();
+				});
+			});
+		});
+
 		it('should return a 404 error if the user does not exist', function(done) {
 			// Make the request
 			request(url)
@@ -148,63 +208,5 @@ describe('/users', function() {
 				});
 			});
 		});
-
-		// it('should create a new user when a post is made', function (done) {
-		// 	var data = {
-		// 		username: 'TestUser',
-		// 		password: 'TestPassword',
-		// 		email: 'test@example.com',
-		// 		firstName: 'Test',
-		// 		lastName: 'User'
-		// 	}
-		//
-		// 	request(url)
-		// 	.post('/signup')
-		// 	.send(data)
-		// 	.end(function (err, res) {
-		// 		assert.ifError(err);
-		//
-		// 		assert.equal(res.status, 302, 'request returned an error');
-		// 		assert.equal(res.text, 'Found. Redirecting to /home');
-		//
-		// 		// Check user was created
-		// 		User.find({firstName: 'Test'}, function (err, results) {
-		// 			assert.ifError(err);
-		//
-		// 			assert.equal(results.length, 1);
-		//
-		// 			assert.equal(results[0].username, 'TestUser');
-		// 			assert.ok(bCrypt.compareSync('TestPassword', results[0].password));
-		// 			assert.equal(results[0].email, 'test@example.com');
-		// 			assert.equal(results[0].firstName, 'Test');
-		// 			assert.equal(results[0].lastName, 'User');
-		//
-		// 			done();
-		// 		});
-		// 	});
-		// });
-
-		// it('should correctly update an existing account', function(done){
-		// 	var body = {
-		// 		firstName: 'JP',
-		// 		lastName: 'Berd'
-		// 	};
-		// 	request(url)
-		// 	.put('/api/profiles/vgheri')
-		// 	.send(body)
-		// 	.expect('Content-Type', /json/)
-		// 	.expect(200) //Status code
-		// 	.end(function(err,res) {
-		// 		if (err) {
-		// 			throw err;
-		// 		}
-		// 		// Should.js fluent syntax applied
-		// 		res.body.should.have.property('_id');
-		// 		res.body.firstName.should.equal('JP');
-		// 		res.body.lastName.should.equal('Berd');
-		// 		res.body.creationDate.should.not.equal(null);
-		// 		done();
-		// 	});
-		// });
 	});
 });
