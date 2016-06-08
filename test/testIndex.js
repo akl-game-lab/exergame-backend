@@ -181,7 +181,7 @@ describe('Index', function() {
 			});
 		});
 
-		it('should successfully log in', function(done)	{
+		it('should successfully log in and redirect to home', function(done)	{
 
 			var loginData = {
 				password: 'TestPassword',
@@ -222,8 +222,21 @@ describe('Index', function() {
 					done();
 				});
 			});
-
 		});
+
+		it('should unsuccessfully navigate to home', function (done) {
+			request(url)
+			.get('/signout')
+			.end(function (err, res) {
+
+				var r = request(url)
+				.get('/home')
+				.end(function (err, res) {
+				  assert.equal(res.text, 'Found. Redirecting to /');
+					done()
+				})
+			});
+		})
 
 		// it('should correctly update an existing account', function(done){
 		// 	var body = {
