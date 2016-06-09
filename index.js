@@ -6,7 +6,7 @@ module.exports = function () {
 	var app = require('./app');
 	var debug = require('debug')('exergaming-backend:server');
 	var http = require('http');
-	var config = require('config');
+	var config = require('./config');
 
 	/**
 	 * Check if the encryption key environement variable is set.
