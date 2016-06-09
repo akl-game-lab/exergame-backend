@@ -15,3 +15,5 @@ npm install -g casperjs
 npm install
 ./bin/www
 ```
+
+Copy config.js.sample to config.js and set encryption key to some value which is to be kept secret (do not commit config.js). If you change this key, the contents of your database will become invalid.
