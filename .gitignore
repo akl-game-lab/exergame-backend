@@ -1,3 +1,6 @@
+# Config file
+config.js
+
 # ---> Node
 # Logs
 logs
@@ -53,4 +56,3 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
-

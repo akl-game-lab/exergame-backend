@@ -6,6 +6,18 @@ module.exports = function () {
 	var app = require('./app');
 	var debug = require('debug')('exergaming-backend:server');
 	var http = require('http');
+	var config = require('config');
+
+	/**
+	 * Check if the encryption key environement variable is set.
+	 */
+
+	if(!config.encryptionKey) {
+		console.error('encryptionKey config value not set!');
+		console.error('If this is your first time running the system, you may set this to anything.');
+		console.error('If your database has already been set up, it will not work without the correct key.');
+		process.exit(1);
+	}
 
 	/**
 	 * Get port from environment and store in Express.
