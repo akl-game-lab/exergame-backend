@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
+var config = require('../config');
+var cryptoJs = require('crypto-js');
 
-module.exports = mongoose.model('User', {
+var userSchema = new mongoose.Schema({
 	id: String,
 	username: String,
 	password: String,
@@ -15,3 +17,9 @@ module.exports = mongoose.model('User', {
 		}
 	}
 });
+
+userSchema.virtual('credentials.exerciseDotCom.plainPassword').get(function () {
+	return cryptoJs.AES.decrypt(this.credentials.exerciseDotCom.password, config.encryptionKey).toString(cryptoJs.enc.Utf8)
+})
+
+module.exports = mongoose.model('User', userSchema);

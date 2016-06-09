@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var verifyTask = require('../misc/verify-task');
+var verifyTask = require('../misc/sources/exercise-dot-com');
+var cryptoJs = require('crypto-js');
+var config = require('../config');
 
 var isAuthenticated = function (req, res, next) {
 	// if user is authenticated in the session, call the next() to call the next request handler
@@ -68,7 +70,7 @@ module.exports = function (passport) {
 		req.user.credentials = {
 			exerciseDotCom: {
 				username: username,
-				password: password
+				password: cryptoJs.AES.encrypt(password, config.encryptionKey).toString()
 			}
 		};
 
