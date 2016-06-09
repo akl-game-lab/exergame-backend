@@ -20,8 +20,8 @@ function getUserData() {
 		} else {
 			for (var i = 0; i < users.length; i++) {
 				// If user has exercise.com credentials, run casper.
-				if (users[i].credentials.exerciseDotCom.username && users[i].credentials.exerciseDotCom.password) {
-					retrieveExerciseData(users[i].email, users[i].credentials.exerciseDotCom.username, users[i].credentials.exerciseDotCom.password);
+				if (users[i].credentials.exerciseDotCom.username && users[i].credentials.exerciseDotCom.plainPassword) {
+					retrieveExerciseData(users[i].email, users[i].credentials.exerciseDotCom.username, users[i].credentials.exerciseDotCom.plainPassword);
 				} else {
 					//temp
 					console.log(`User: ${users[i].email} has no exercise.com credentials`);
@@ -38,8 +38,8 @@ function getUserDataByEmail(email, callback) {
 			console.error(err);
 		} else {
 			// If user has exercise.com credentials, run casper.retrieveExerciseDataretrieveExerciseData
-			if (user.credentials.exerciseDotCom.username && user.credentials.exerciseDotCom.password) {
-				retrieveExerciseData(user.email, user.credentials.exerciseDotCom.username, user.credentials.exerciseDotCom.password, callback);
+			if (user.credentials.exerciseDotCom.username && user.credentials.exerciseDotCom.plainPassword) {
+				retrieveExerciseData(user.email, user.credentials.exerciseDotCom.username, user.credentials.exerciseDotCom.plainPassword, callback);
 			} else {
 				//temp
 				console.log(`User: ${user.email} has no exercise.com credentials`);
