@@ -4,7 +4,6 @@ var Workout = require('../models/workout');
 var ExerciseDotCom = require('../models/sources/exercise-dot-com');
 var User = require('../models/user');
 var getByEmail = require('../misc/tasks');
-var builder = require('xmlbuilder');
 var ObjectId = require('mongoose').Types.ObjectId;
 
 var passport = require('passport');
@@ -43,10 +42,6 @@ router.get('/', function (req, res, next) {
 	res.send('respond with a resource');
 });
 
-// router.post('/register', function (req, res, next) {
-//
-// });
-
 router.post('/login', passport.authenticate('local', {
 	successRedirect: '/',
 	failureRedirect: '/login',
@@ -64,18 +59,20 @@ router.get('/:id/workouts/:from/:to', function (req, res, next) {
 	var userId = decodeURIComponent(req.params.id);
 	var from = parseInt(req.params.from); // In seconds for Skyrim
 	var to = parseInt(req.params.to); // In seconds for Skyrim
-	var sendData = builder.create('data');
+	var sendData = {
+		data: {}
+	};
 
 	if(Number.isInteger(from) && Number.isInteger(to) && from >= 0 && to >= 0 && from < to) {
 		User.find({
 			email: userId
 		}, function (err, users) {
 			if (users.length === 0) {
-				sendData.ele({
+				sendData.data = {
 					errorCode: '404',
 					errorMessage: 'User not found'
-				});
-				res.status(404).send(sendData.end({ pretty: true }));
+				};
+				res.status(404).send(sendData);
 			} else {
 				ExerciseDotCom.find({
 					userEmail: userId,
@@ -90,7 +87,7 @@ router.get('/:id/workouts/:from/:to', function (req, res, next) {
 						return;
 					}
 
-					sendData = sendData.ele('workouts');
+					sendData.data.workouts = [];
 
 					for (var i in workouts) {
 						// Skyrim attributes, this will be generalised in the future so it can apply to more than one game.
@@ -114,29 +111,29 @@ router.get('/:id/workouts/:from/:to', function (req, res, next) {
 							}
 						}
 
-						// Build XML document.
-						sendData.ele('workout').ele({
+						// Build object
+						sendData.data.workouts.push({
 							syncDate: Math.floor((new Date(Date.now())).valueOf() / 1000), // seconds
 							workoutDate: workouts[i].data.workout_date, //seconds
 							health: health,
 							stamina: stamina,
 							magicka: magicka
-						}).up();
+						});
 						workouts[i].used = true;
 						workouts[i].save();
 					}
 
-					// Return XML.
-					res.send(sendData.end({ pretty: true }));
+					// Return data.
+					res.send(sendData);
 				});
 			}
 		});
 	} else {
-		sendData.ele({
+		sendData.data = {
 			errorCode: '400',
 			errorMessage: 'Invalid date(s)'
-		});
-		res.status(400).send(sendData.end({ pretty: true }));
+		};
+		res.status(400).send(sendData);
 	}
 
 

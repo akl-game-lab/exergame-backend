@@ -3,7 +3,6 @@ var request = require('supertest');
 var mongoose = require('mongoose');
 var http = require('http');
 var bCrypt = require('bcrypt-nodejs');
-var parseString = require('xml2js').parseString;
 
 var server = require('../index');
 var db = require('../db');
@@ -70,7 +69,7 @@ describe('/users', function() {
 	});
 
 	describe('/{id}/workouts/{from}/{to}', function() {
-		it('should return an empty workouts xml if the user exists but has no data.', function(done) {
+		it('should return an empty workouts object if the user exists but has no data.', function(done) {
 			// Make the request
 			request(url)
 			.get('/users/example%40example.com/workouts/0/9999999999999')
@@ -80,16 +79,16 @@ describe('/users', function() {
 
 				assert.equal(res.status, 200, 'request returned an error');
 
-				parseString(res.text, function (err, data) {
-					assert.deepEqual(data.data, {
-						workouts: [''],
-					});
-					done();
+				var data = JSON.parse(res.text);
+
+				assert.deepEqual(data.data, {
+					workouts: [],
 				});
+				done();
 			});
 		});
 
-		it('should data as xml if the user exists and has data.', function(done) {
+		it('should data as json if the user exists and has data.', function(done) {
 			// Make the request
 			request(url)
 			.get('/users/hasdata%40example.com/workouts/0/1500000000000')
@@ -99,33 +98,21 @@ describe('/users', function() {
 
 				assert.equal(res.status, 200, 'request returned an error');
 
-				parseString(res.text, function (err, data) {
-					data.data.workouts[0].workout[0].syncDate[0] = 'Untestable';
-					assert.deepEqual(data.data, {
-						workouts: [{
-							workout: [
-								{
-									health: [
-										'0'
-									],
-									magicka: [
-										'0'
-									],
-									stamina: [
-										'1001'
-									],
-									syncDate: [
-										'Untestable'
-									],
-									workoutDate: [
-										'1463011200'
-									]
-								}
-							]
-						}]
-					});
-					done();
+				var data = JSON.parse(res.text);
+
+				data.data.workouts[0].syncDate = 'Untestable';
+				assert.deepEqual(data.data, {
+					workouts: [
+						{
+							health: 0,
+							magicka: 0,
+							stamina: 1001,
+							syncDate: 'Untestable',
+							workoutDate: '1463011200'
+						}
+					]
 				});
+				done();
 			});
 		});
 
@@ -137,15 +124,15 @@ describe('/users', function() {
 			.end(function(err, res) {
 				assert.ifError(err);
 
-				assert.equal(res.status, 400, 'request returned an error');
+				assert.equal(res.status, 400, 'request returned the wrong status');
 
-				parseString(res.text, function (err, data) {
-					assert.deepEqual(data.data, {
-						errorCode: ['400'],
-						errorMessage: ['Invalid date(s)']
-					});
-					done();
+				var data = JSON.parse(res.text);
+
+				assert.deepEqual(data.data, {
+					errorCode: '400',
+					errorMessage: 'Invalid date(s)'
 				});
+				done();
 			});
 		});
 
@@ -157,15 +144,15 @@ describe('/users', function() {
 			.end(function(err, res) {
 				assert.ifError(err);
 
-				assert.equal(res.status, 400, 'request returned an error');
+				assert.equal(res.status, 400, 'request returned the wrong status');
 
-				parseString(res.text, function (err, data) {
-					assert.deepEqual(data.data, {
-						errorCode: ['400'],
-						errorMessage: ['Invalid date(s)']
-					});
-					done();
+				var data = JSON.parse(res.text);
+
+				assert.deepEqual(data.data, {
+					errorCode: '400',
+					errorMessage: 'Invalid date(s)'
 				});
+				done();
 			});
 		});
 
@@ -177,15 +164,15 @@ describe('/users', function() {
 			.end(function(err, res) {
 				assert.ifError(err);
 
-				assert.equal(res.status, 400, 'request returned an error');
+				assert.equal(res.status, 400, 'request returned the wrong status');
 
-				parseString(res.text, function (err, data) {
-					assert.deepEqual(data.data, {
-						errorCode: ['400'],
-						errorMessage: ['Invalid date(s)']
-					});
-					done();
+				var data = JSON.parse(res.text);
+
+				assert.deepEqual(data.data, {
+					errorCode: '400',
+					errorMessage: 'Invalid date(s)'
 				});
+				done();
 			});
 		});
 
@@ -197,15 +184,15 @@ describe('/users', function() {
 			.end(function(err, res) {
 				assert.ifError(err);
 
-				assert.equal(res.status, 404, 'request returned an error');
+				assert.equal(res.status, 404, 'request returned the wrong status');
 
-				parseString(res.text, function (err, data) {
-					assert.deepEqual(data.data, {
-						errorCode: ['404'],
-						errorMessage: ['User not found']
-					});
-					done();
+				var data = JSON.parse(res.text);
+
+				assert.deepEqual(data.data, {
+					errorCode: '404',
+					errorMessage: 'User not found'
 				});
+				done();
 			});
 		});
 	});
