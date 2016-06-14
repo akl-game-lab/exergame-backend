@@ -68,11 +68,11 @@ describe('/users', function() {
 		});
 	});
 
-	describe('/{id}/workouts/{from}/{to}', function() {
+	describe('/{id}/workouts/hsm/{from}/{to}', function() {
 		it('should return an empty workouts object if the user exists but has no data.', function(done) {
 			// Make the request
 			request(url)
-			.get('/users/example%40example.com/workouts/0/9999999999999')
+			.get('/users/example%40example.com/workouts/hsm/0/9999999999999')
 			// end handles the response
 			.end(function(err, res) {
 				assert.ifError(err);
@@ -91,7 +91,7 @@ describe('/users', function() {
 		it('should data as json if the user exists and has data.', function(done) {
 			// Make the request
 			request(url)
-			.get('/users/hasdata%40example.com/workouts/0/1500000000000')
+			.get('/users/hasdata%40example.com/workouts/hsm/0/1500000000000')
 			// end handles the response
 			.end(function(err, res) {
 				assert.ifError(err);
@@ -119,7 +119,7 @@ describe('/users', function() {
 		it('should return 400 if the user exists but from date is invalid', function(done) {
 			// Make the request
 			request(url)
-			.get('/users/example%40example.com/workouts/-1/100')
+			.get('/users/example%40example.com/workouts/hsm/-1/100')
 			// end handles the response
 			.end(function(err, res) {
 				assert.ifError(err);
@@ -139,7 +139,7 @@ describe('/users', function() {
 		it('should return 400 if the user exists but to date is invalid', function(done) {
 			// Make the request
 			request(url)
-			.get('/users/example%40example.com/workouts/100/word')
+			.get('/users/example%40example.com/workouts/hsm/100/word')
 			// end handles the response
 			.end(function(err, res) {
 				assert.ifError(err);
@@ -159,7 +159,7 @@ describe('/users', function() {
 		it('should return 400 if the user exists but from dates are not in order', function(done) {
 			// Make the request
 			request(url)
-			.get('/users/example%40example.com/workouts/100/50')
+			.get('/users/example%40example.com/workouts/hsm/100/50')
 			// end handles the response
 			.end(function(err, res) {
 				assert.ifError(err);
@@ -179,7 +179,7 @@ describe('/users', function() {
 		it('should return a 404 error if the user does not exist', function(done) {
 			// Make the request
 			request(url)
-			.get('/users/fakeuser/workouts/0/9999999999999')
+			.get('/users/fakeuser/workouts/hsm/0/9999999999999')
 			// end handles the response
 			.end(function(err, res) {
 				assert.ifError(err);

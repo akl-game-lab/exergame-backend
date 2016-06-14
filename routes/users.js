@@ -4,7 +4,7 @@ var Workout = require('../models/workout');
 var ExerciseDotCom = require('../models/sources/exercise-dot-com');
 var User = require('../models/user');
 var getByEmail = require('../misc/tasks');
-var HsmFormat = require('../dtos/HsmFormat');
+var formatFactory = require('../dtos/formatFactory');
 var ObjectId = require('mongoose').Types.ObjectId;
 
 var passport = require('passport');
@@ -56,15 +56,24 @@ router.get('/:id/forceUpdate', function (req, res, next) {
 	res.send(builder.create('data').ele({ started: true }).end({ pretty: true }));
 });
 
-router.get('/:id/workouts/:from/:to', function (req, res, next) {
+router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 	var userId = decodeURIComponent(req.params.id);
+	var format = decodeURIComponent(req.params.format);
 	var from = parseInt(req.params.from); // In seconds for Skyrim
 	var to = parseInt(req.params.to); // In seconds for Skyrim
 	var sendData = {
 		data: {}
 	};
 
-	if(Number.isInteger(from) && Number.isInteger(to) && from >= 0 && to >= 0 && from < to) {
+	dto = formatFactory(format);
+
+	if (!dto) {
+		sendData.data = {
+			errorCode: '404',
+			errorMessage: 'No such format: format'
+		};
+		res.status(404).send(sendData);
+	} else if(Number.isInteger(from) && Number.isInteger(to) && from >= 0 && to >= 0 && from < to) {
 		User.find({
 			email: userId
 		}, function (err, users) {
@@ -88,7 +97,7 @@ router.get('/:id/workouts/:from/:to', function (req, res, next) {
 						return;
 					}
 
-					sendData.data.workouts = new HsmFormat().transform(workouts);
+					sendData.data.workouts = dto.transform(workouts);
 
 					// Return data.
 					res.send(sendData);
