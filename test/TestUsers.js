@@ -68,6 +68,68 @@ describe('/users', function() {
 		});
 	});
 
+	describe('/{id}/workouts/{format}/{from}/{to}', function() {
+		it('should return a 404 error if an invalid format is used.', function(done) {
+			// Make the request
+			request(url)
+			.get('/users/example%40example.com/workouts/ham/0/9999999999999')
+			// end handles the response
+			.end(function(err, res) {
+				assert.ifError(err);
+
+				assert.equal(res.status, 404, 'request returned the wrong status');
+
+				var data = JSON.parse(res.text);
+
+				assert.deepEqual(data.data, {
+					errorCode: '404',
+					errorMessage: 'No such format: ham'
+				});
+				done();
+			});
+		});
+
+		it('should return a 404 error if an invalid format is used with an invalid date.', function(done) {
+			// Make the request
+			request(url)
+			.get('/users/example%40example.com/workouts/ham/2/1')
+			// end handles the response
+			.end(function(err, res) {
+				assert.ifError(err);
+
+				assert.equal(res.status, 404, 'request returned the wrong status');
+
+				var data = JSON.parse(res.text);
+
+				assert.deepEqual(data.data, {
+					errorCode: '404',
+					errorMessage: 'No such format: ham'
+				});
+				done();
+			});
+		});
+
+		it('should return a 404 error if the user does not exist and the data format does not exist.', function(done) {
+			// Make the request
+			request(url)
+			.get('/users/fakeuser/workouts/ham/0/9999999999999')
+			// end handles the response
+			.end(function(err, res) {
+				assert.ifError(err);
+
+				assert.equal(res.status, 404, 'request returned the wrong status');
+
+				var data = JSON.parse(res.text);
+
+				assert.deepEqual(data.data, {
+					errorCode: '404',
+					errorMessage: 'User not found'
+				});
+				done();
+			});
+		});
+	});
+
 	describe('/{id}/workouts/hsm/{from}/{to}', function() {
 		it('should return an empty workouts object if the user exists but has no data.', function(done) {
 			// Make the request
@@ -88,7 +150,7 @@ describe('/users', function() {
 			});
 		});
 
-		it('should data as json if the user exists and has data.', function(done) {
+		it('should return data as json if the user exists and has data.', function(done) {
 			// Make the request
 			request(url)
 			.get('/users/hasdata%40example.com/workouts/hsm/0/1500000000000')
@@ -180,6 +242,133 @@ describe('/users', function() {
 			// Make the request
 			request(url)
 			.get('/users/fakeuser/workouts/hsm/0/9999999999999')
+			// end handles the response
+			.end(function(err, res) {
+				assert.ifError(err);
+
+				assert.equal(res.status, 404, 'request returned the wrong status');
+
+				var data = JSON.parse(res.text);
+
+				assert.deepEqual(data.data, {
+					errorCode: '404',
+					errorMessage: 'User not found'
+				});
+				done();
+			});
+		});
+	});
+
+	describe('/{id}/workouts/unified/{from}/{to}', function() {
+		it('should return an empty workouts object if the user exists but has no data.', function(done) {
+			// Make the request
+			request(url)
+			.get('/users/example%40example.com/workouts/unified/0/9999999999999')
+			// end handles the response
+			.end(function(err, res) {
+				assert.ifError(err);
+
+				assert.equal(res.status, 200, 'request returned an error');
+
+				var data = JSON.parse(res.text);
+
+				assert.deepEqual(data.data, {
+					workouts: [],
+				});
+				done();
+			});
+		});
+
+		it('should return data as json in the unified format if the user exists and has data.', function(done) {
+			// Make the request
+			request(url)
+			.get('/users/hasdata%40example.com/workouts/unified/0/1500000000000')
+			// end handles the response
+			.end(function(err, res) {
+				assert.ifError(err);
+
+				assert.equal(res.status, 200, 'request returned an error');
+
+				var data = JSON.parse(res.text);
+
+				data.data.workouts[0].syncDate = 'Untestable';
+				assert.deepEqual(data.data, {
+					workouts: [
+						{
+							points: 1001,
+							syncDate: 'Untestable',
+							workoutDate: '1463011200'
+						}
+					]
+				});
+				done();
+			});
+		});
+
+		it('should return 400 if the user exists but from date is invalid', function(done) {
+			// Make the request
+			request(url)
+			.get('/users/example%40example.com/workouts/unified/-1/100')
+			// end handles the response
+			.end(function(err, res) {
+				assert.ifError(err);
+
+				assert.equal(res.status, 400, 'request returned the wrong status');
+
+				var data = JSON.parse(res.text);
+
+				assert.deepEqual(data.data, {
+					errorCode: '400',
+					errorMessage: 'Invalid date(s)'
+				});
+				done();
+			});
+		});
+
+		it('should return 400 if the user exists but to date is invalid', function(done) {
+			// Make the request
+			request(url)
+			.get('/users/example%40example.com/workouts/unified/100/word')
+			// end handles the response
+			.end(function(err, res) {
+				assert.ifError(err);
+
+				assert.equal(res.status, 400, 'request returned the wrong status');
+
+				var data = JSON.parse(res.text);
+
+				assert.deepEqual(data.data, {
+					errorCode: '400',
+					errorMessage: 'Invalid date(s)'
+				});
+				done();
+			});
+		});
+
+		it('should return 400 if the user exists but from dates are not in order', function(done) {
+			// Make the request
+			request(url)
+			.get('/users/example%40example.com/workouts/unified/100/50')
+			// end handles the response
+			.end(function(err, res) {
+				assert.ifError(err);
+
+				assert.equal(res.status, 400, 'request returned the wrong status');
+
+				var data = JSON.parse(res.text);
+
+				assert.deepEqual(data.data, {
+					errorCode: '400',
+					errorMessage: 'Invalid date(s)'
+				});
+				done();
+			});
+		});
+
+		it('should return a 404 error if the user does not exist', function(done) {
+			// Make the request
+			request(url)
+			.get('/users/fakeuser/workouts/unified/0/9999999999999')
 			// end handles the response
 			.end(function(err, res) {
 				assert.ifError(err);

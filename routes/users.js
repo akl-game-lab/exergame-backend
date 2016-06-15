@@ -71,52 +71,48 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 
 	var transformer = transformerFactory(format);
 
-	if (!transformer) {
-		sendData.data = {
-			errorCode: '404',
-			errorMessage: 'No such format: format'
-		};
-		res.status(404).send(sendData);
-	} else if(Number.isInteger(from) && Number.isInteger(to) && from >= 0 && to >= 0 && from < to) {
-		User.find({
-			email: userId
-		}, function (err, users) {
-			if (users.length === 0) {
-				sendData.data = {
-					errorCode: '404',
-					errorMessage: 'User not found'
-				};
-				res.status(404).send(sendData);
-			} else {
-				ExerciseDotCom.find({
-					userEmail: userId,
-					dateRetrieved: {
-						$gt: new Date(from * 1000),
-						$lt: new Date(to * 1000)
-					}
-				},
-				function (err, workouts) {
-					if (err) {
-						res.send(err);
-						return;
-					}
+	User.find({
+		email: userId
+	}, function (err, users) {
+		if (users.length === 0) {
+			sendData.data = {
+				errorCode: '404',
+				errorMessage: 'User not found'
+			};
+			res.status(404).send(sendData);
+		} else if (!transformer) {
+			sendData.data = {
+				errorCode: '404',
+				errorMessage: `No such format: ${format}`
+			};
+			res.status(404).send(sendData);
+		} else if(Number.isInteger(from) && Number.isInteger(to) && from >= 0 && to >= 0 && from < to) {
+			ExerciseDotCom.find({
+				userEmail: userId,
+				dateRetrieved: {
+					$gt: new Date(from * 1000),
+					$lt: new Date(to * 1000)
+				}
+			},
+			function (err, workouts) {
+				if (err) {
+					res.send(err);
+					return;
+				}
 
-					sendData.data.workouts = transformer.transform(workouts);
+				sendData.data.workouts = transformer.transform(workouts);
 
-					// Return data.
-					res.send(sendData);
-				});
-			}
-		});
-	} else {
-		sendData.data = {
-			errorCode: '400',
-			errorMessage: 'Invalid date(s)'
-		};
-		res.status(400).send(sendData);
-	}
-
-
+				// Return data.
+				res.send(sendData);
+			});
+		} else {
+			sendData.data = {
+				errorCode: '400',
+				errorMessage: 'Invalid date(s)'
+			};
+			res.status(400).send(sendData);
+		}
+	});
 });
 
 module.exports = router;

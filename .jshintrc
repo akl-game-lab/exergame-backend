@@ -6,6 +6,7 @@
   "eqeqeq": true,
   "immed": true,
   "latedef": false,
+  "mocha": true,
   "newcap": true,
   "noarg": true,
   "quotmark": "single",
