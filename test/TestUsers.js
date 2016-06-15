@@ -268,12 +268,10 @@ describe('/users', function() {
 				assert.equal(res.status, 200, 'request returned an error');
 
 				var data = JSON.parse(res.text);
-				var workoutData = require('./data/raw.json');
-				workoutData.workouts[0]._id = 'Untestable';
+				var rawData = require('./data/raw.json');
 				data.data.workouts[0]._id = 'Untestable';
-				workoutData.workouts[0].dateRetrieved = 'Untestable';
 				data.data.workouts[0].dateRetrieved = 'Untestable';
-				assert.deepEqual(data.data, workoutData);
+				assert.deepEqual(data.data, rawData);
 				done();
 			});
 		});

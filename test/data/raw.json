@@ -2,7 +2,7 @@
 	"workouts": [
 		{
 			"__v": 0,
-			"_id": "5760c09f2c67bf5c43705e48",
+			"_id": "Untestable",
 			"data": {
 				"activity_id": 1900622,
 				"buddys": null,
@@ -73,7 +73,7 @@
 				"workout_plan_id": null,
 				"workout_plan_name": null
 			},
-			"dateRetrieved": "2016-06-15T02:30:54.060Z",
+			"dateRetrieved": "Untestable",
 			"gamesUsed": [],
 			"used": true,
 			"userEmail": "hasdata@example.com",
