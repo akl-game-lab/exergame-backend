@@ -4,7 +4,7 @@ var Workout = require('../models/workout');
 var ExerciseDotCom = require('../models/sources/exercise-dot-com');
 var User = require('../models/user');
 var getByEmail = require('../misc/tasks');
-var formatFactory = require('../dtos/formatFactory');
+var transformerFactory = require('../transformers/transformerFactory');
 var ObjectId = require('mongoose').Types.ObjectId;
 
 var passport = require('passport');
@@ -53,7 +53,11 @@ router.get('/:id/forceUpdate', function (req, res, next) {
 	var userId = decodeURIComponent(req.params.id);
 
 	getByEmail(userId);
-	res.send(builder.create('data').ele({ started: true }).end({ pretty: true }));
+	res.send({
+		data: {
+			started: 'true'
+		}
+	});
 });
 
 router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
@@ -65,9 +69,9 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 		data: {}
 	};
 
-	dto = formatFactory(format);
+	var transformer = transformerFactory(format);
 
-	if (!dto) {
+	if (!transformer) {
 		sendData.data = {
 			errorCode: '404',
 			errorMessage: 'No such format: format'
@@ -97,7 +101,7 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 						return;
 					}
 
-					sendData.data.workouts = dto.transform(workouts);
+					sendData.data.workouts = transformer.transform(workouts);
 
 					// Return data.
 					res.send(sendData);

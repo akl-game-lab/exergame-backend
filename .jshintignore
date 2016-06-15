@@ -1,2 +1,4 @@
 node_modules/
 misc/casper/
+test/
+coverage/

@@ -19,7 +19,7 @@ var userSchema = new mongoose.Schema({
 });
 
 userSchema.virtual('credentials.exerciseDotCom.plainPassword').get(function () {
-	return cryptoJs.AES.decrypt(this.credentials.exerciseDotCom.password, config.encryptionKey).toString(cryptoJs.enc.Utf8)
-})
+	return cryptoJs.AES.decrypt(this.credentials.exerciseDotCom.password, config.encryptionKey).toString(cryptoJs.enc.Utf8);
+});
 
 module.exports = mongoose.model('User', userSchema);
