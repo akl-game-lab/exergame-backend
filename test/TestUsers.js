@@ -257,6 +257,26 @@ describe('/users', function() {
 				done();
 			});
 		});
+
+		it('should return raw data for user', function (done) {
+			request(url)
+			.get('/users/hasdata%40example.com/workouts/raw/0/1500000000000')
+			// end handles the response
+			.end(function(err, res) {
+				assert.ifError(err);
+
+				assert.equal(res.status, 200, 'request returned an error');
+
+				var data = JSON.parse(res.text);
+				var workoutData = require('./data/raw.json');
+				workoutData.workouts[0]._id = 'Untestable';
+				data.data.workouts[0]._id = 'Untestable';
+				workoutData.workouts[0].dateRetrieved = 'Untestable';
+				data.data.workouts[0].dateRetrieved = 'Untestable';
+				assert.deepEqual(data.data, workoutData);
+				done();
+			});
+		});
 	});
 
 	describe('/{id}/workouts/unified/{from}/{to}', function() {

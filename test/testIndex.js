@@ -62,7 +62,7 @@ describe('Index', function() {
 				email: 'test@example.com',
 				firstName: 'Test',
 				lastName: 'User'
-			}
+			};
 
 			request(url)
 			.post('/signup')
@@ -195,7 +195,7 @@ describe('Index', function() {
 				assert.equal(res.text, 'Found. Redirecting to /home');
 				done();
 			});
-		})
+		});
 
 		it('should successfully log out', function (done)	{
 			var loginData = {
@@ -209,7 +209,7 @@ describe('Index', function() {
 			.end(function (err, res) {
 				assert.ifError(err);
 				//successful login redirects to home
-				assert.equal(res.text, 'Found. Redirecting to /home')
+				assert.equal(res.text, 'Found. Redirecting to /home');
 
 				request(url)
 				.get('/signout')
@@ -231,32 +231,9 @@ describe('Index', function() {
 				.get('/home')
 				.end(function (err, res) {
 				  assert.equal(res.text, 'Found. Redirecting to /');
-					done()
-				})
+					done();
+				});
 			});
-		})
-
-		// it('should correctly update an existing account', function(done){
-		// 	var body = {
-		// 		firstName: 'JP',
-		// 		lastName: 'Berd'
-		// 	};
-		// 	request(url)
-		// 	.put('/api/profiles/vgheri')
-		// 	.send(body)
-		// 	.expect('Content-Type', /json/)
-		// 	.expect(200) //Status code
-		// 	.end(function(err,res) {
-		// 		if (err) {
-		// 			throw err;
-		// 		}
-		// 		// Should.js fluent syntax applied
-		// 		res.body.should.have.property('_id');
-		// 		res.body.firstName.should.equal('JP');
-		// 		res.body.lastName.should.equal('Berd');
-		// 		res.body.creationDate.should.not.equal(null);
-		// 		done();
-		// 	});
-		// });
+		});
 	});
 });
