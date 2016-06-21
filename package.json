@@ -22,7 +22,8 @@
     "node-schedule": "^1.1.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "winston": "^2.2.0"
   },
   "devDependencies": {
     "supertest": "^1.2.0"
