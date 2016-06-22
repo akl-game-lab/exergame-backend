@@ -9,6 +9,9 @@ var session = require('express-session');
 var mongoose = require('mongoose');
 var passport = require('passport');
 
+var logManager = require('./log-manager');
+var logger = require('./logger');
+
 var initPassport = require('./passport/init');
 var dbConfig = require('./db');
 mongoose.connect(dbConfig.url);
