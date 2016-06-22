@@ -3,6 +3,7 @@ config.js
 
 # ---> Node
 # Logs
+log
 *.log
 npm-debug.log*
 
