@@ -11,7 +11,9 @@ var archiveDirectory = 'logs/log-archive';
 
 if (!fs.existsSync(logDirectory)){
 	fs.mkdirSync(logDirectory);
-} else if (!fs.existsSync(archiveDirectory)) {
+}
+
+if (!fs.existsSync(archiveDirectory)) {
 	fs.mkdirSync(archiveDirectory);
 }
 

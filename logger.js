@@ -1,4 +1,5 @@
 var winston = require('winston');
+var _ = require('underscore');
 
 var currentDate = new Date().toISOString().replace(/T.+/, '');
 var options = {
@@ -27,22 +28,21 @@ var logger = new (winston.Logger)({
 	]
 });
 
-process.argv.forEach(function(arg){
-	switch(arg) {
-		case '--error':
-		logger.transports.console.level = 'error';
-		break;
-		case '--warn':
-		logger.transports.console.level = 'warn';
-		break;
-		case '--info':
-		logger.transports.console.level = 'info';
-		break;
-		case '--debug':
-		logger.transports.console.level = 'debug';
-		break;
-		default:
+/**
+	log levels in order of priority (high to low) are: error, warn, info, verbose, debug and silly.
+	specifying a log level will exclude the levels of lower priority being logged. default log level
+	is info.
+**/
+var logLevels = ['error', 'warn', 'info', 'verbose', 'debug', 'silly'];
+
+for (var i = 0; i < process.argv.length; i++) {
+	if(process.argv[i] === '--log-level') {
+		if(_.contains(logLevels,process.argv[i+1])){
+			logger.transports.console.level = process.argv[i+1];
+		} else {
+			logger.warn('invalid log level specified, defaulting to "info"');
+		}
 	}
-});
+}
 
 module.exports = logger;
