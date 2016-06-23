@@ -30,7 +30,7 @@ module.exports = function (passport) {
 
 			// User and password both match, return user from done method
 			// which will be treated like success
-			log.info('User and password verified')
+			log.info('User and password verified');
 			return done(null, user);
 		});
 	}));
