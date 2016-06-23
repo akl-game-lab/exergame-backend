@@ -1,7 +1,9 @@
 'use strict';
+var log = require('../misc/logger');
 
 module.exports = class {
 	transform(workouts) {
+		log.debug('HSM transformer being used');
 		var transformed = [];
 
 		for (var i in workouts) {
@@ -34,10 +36,12 @@ module.exports = class {
 				stamina: stamina,
 				magicka: magicka
 			});
+
 			workouts[i].used = true;
 			workouts[i].save();
 		}
 
+		log.debug('HSM transformed data creation successful');
 		return transformed;
 	}
 };

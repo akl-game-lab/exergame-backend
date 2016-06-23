@@ -1,6 +1,7 @@
 var schedule = require('node-schedule');
 var User = require('../models/user');
 var retrieveExerciseData = require('./sources/exercise-dot-com').retrieveExerciseData;
+var log = require('./logger');
 
 process.argv.forEach(function (element) {
 	if (element === '--force') {
@@ -10,21 +11,24 @@ process.argv.forEach(function (element) {
 
 // Run every hour
 schedule.scheduleJob({ minute: [0, 20, 40] }, function () {
+	log.info('Updating User data');
 	getUserData();
 });
 
 function getUserData() {
+	log.info('Attempting to find user data');
 	User.find(function (err, users) {
 		if (err) {
-			console.error(err);
+			log.error(err);
 		} else {
 			for (var i = 0; i < users.length; i++) {
 				// If user has exercise.com credentials, run casper.
 				if (users[i].credentials.exerciseDotCom.username && users[i].credentials.exerciseDotCom.plainPassword) {
+					log.debug('User found with credentials, retrieving exercise data');
 					retrieveExerciseData(users[i].email, users[i].credentials.exerciseDotCom.username, users[i].credentials.exerciseDotCom.plainPassword);
 				} else {
 					//temp
-					console.log(`User: ${users[i].email} has no exercise.com credentials`);
+					log.warn(`User: ${users[i].email} has no exercise.com credentials`);
 				}
 			}
 		}
@@ -32,17 +36,18 @@ function getUserData() {
 }
 
 function getUserDataByEmail(email, callback) {
+	log.info('finding user data using email');
 	User.findOne({ email: email }, function (err, user) {
-		console.log('Grabbed data for ' + email); // TODO Remove
+		log.info('Grabbed data for ' + email); // TODO Remove
 		if (err) {
-			console.error(err);
+			log.error(err);
 		} else {
 			// If user has exercise.com credentials, run casper.retrieveExerciseDataretrieveExerciseData
 			if (user.credentials.exerciseDotCom.username && user.credentials.exerciseDotCom.plainPassword) {
 				retrieveExerciseData(user.email, user.credentials.exerciseDotCom.username, user.credentials.exerciseDotCom.plainPassword, callback);
 			} else {
 				//temp
-				console.log(`User: ${user.email} has no exercise.com credentials`);
+				log.warn(`User: ${user.email} has no exercise.com credentials`);
 			}
 		}
 	});

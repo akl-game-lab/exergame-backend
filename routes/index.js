@@ -3,16 +3,20 @@ var router = express.Router();
 var verifyTask = require('../misc/sources/exercise-dot-com');
 var cryptoJs = require('crypto-js');
 var config = require('../config');
+var log = require('../misc/logger');
 
 var isAuthenticated = function (req, res, next) {
+	log.info('User authentication');
 	// if user is authenticated in the session, call the next() to call the next request handler
 	// Passport adds this method to request object. A middleware is allowed to add properties to
 	// request and response objects
 	if (req.isAuthenticated()) {
+		log.debug('user is authenticated');
 		return next();
 	}
 
 	// if the user is not authenticated then redirect him to the login page
+	log.warn('user not authenticated, redirecting to home');
 	res.redirect('/');
 };
 
@@ -21,30 +25,26 @@ module.exports = function (passport) {
 	/* GET login page. */
 	router.get('/', function (req, res) {
 		// Display the Login page with any flash message, if any
+		log.info('login page requested');
 		res.render('index', { message: req.flash('message') });
 	});
 
 	/* Handle Login POST */
-	router.post('/login', passport.authenticate('login', {
-		successRedirect: '/home',
-		failureRedirect: '/',
-		failureFlash: true
-	}));
+	router.post('/login', authenticate('login', '/home','/','User attempting to login'));
 
 	/* GET Registration Page */
 	router.get('/signup', function (req, res) {
+		log.info('Registration page requested');
 		res.render('register', { message: req.flash('message') });
 	});
 
 	/* Handle Registration POST */
-	router.post('/signup', passport.authenticate('signup', {
-		successRedirect: '/home',
-		failureRedirect: '/signup',
-		failureFlash: true
-	}));
+	router.post('/signup', authenticate('signup', '/home', '/signup', 'User attempting to signup'));
+
 
 	/* GET Home Page */
 	router.get('/home', isAuthenticated, function (req, res) {
+		log.info('Home page requested');
 		res.render('home', {
 			user: req.user,
 			successMessage: req.query.successMessage,
@@ -54,18 +54,21 @@ module.exports = function (passport) {
 
 	/* Handle Logout */
 	router.get('/signout', function (req, res) {
+		log.info('User logging out');
 		req.logout();
 		res.redirect('/');
 	});
 
 	/* Account Settings*/
 	router.get('/settings', isAuthenticated, function (req, res) {
+		log.info('account settings requested');
 		res.render('settings', { user: req.user });
 	});
 
 	router.post('/settings', isAuthenticated, function (req, res) {
 		var username = req.body['credentials.exerciseDotCom.username'] || undefined;
 		var password = req.body['credentials.exerciseDotCom.password'] || undefined;
+		log.info('user attempting to add credentials for exercise.com');
 
 		req.user.credentials = {
 			exerciseDotCom: {
@@ -76,9 +79,10 @@ module.exports = function (passport) {
 
 		var errorString = 'You need to sign in or sign up before continuing.';
 
+		log.debug('verifying exercise.com account');
 		verifyTask.verifyExerciseDotCom(username, password, function (execReturnVal) {
 			if (execReturnVal.indexOf(errorString) > -1) {
-				console.log('Exercise.com account does not exist');
+				log.info('exercise.com account does not exist');
 				res.render('settings', {
 					user: req.user,
 					errorMessage: 'Exercise.com account does not exist!'
@@ -89,14 +93,24 @@ module.exports = function (passport) {
 			req.user.save(function (err) {
 				if (err) {
 					//@TODO: better way to tell users about errors.
-					console.error(err);
+					log.error(err);
 				}
 
-				console.log('Exercise.com account verfied');
+				log.info('exercise.com account verified, redirecting to home');
 				res.redirect('/home?successMessage=Account registration successful!');
 			});
 		});
 	});
+
+	function authenticate(current, success, failure, logMessage) {
+		log.info(logMessage);
+
+		return passport.authenticate(current, {
+			successRedirect: success,
+			failureRedirect: failure,
+			failureFlash: true
+		});
+	}
 
 	return router;
 };

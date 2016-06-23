@@ -10,10 +10,12 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 
 var logManager = require('./misc/log-manager');
-var logger = require('./misc/logger');
+var log = require('./misc/logger');
 
 var initPassport = require('./passport/init');
 var dbConfig = require('./db');
+
+log.info('connecting to database');
 mongoose.connect(dbConfig.url);
 
 var routes = require('./routes/index');
@@ -21,8 +23,10 @@ var users = require('./routes/users');
 
 var tasks = require('./misc/tasks');
 
+log.info('initialising express');
 var app = express();
 
+log.info('configuring express');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -40,6 +44,7 @@ app.use(passport.session());
 app.use(flash());
 
 // Initialize Passport
+log.info('initialising passport');
 initPassport(passport);
 
 app.use('/', routes(passport));
