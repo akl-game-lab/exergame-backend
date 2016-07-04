@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var config = require('../config');
 var cryptoJs = require('crypto-js');
+var log = require('../misc/logger');
 
 var userSchema = new mongoose.Schema({
 	id: String,
@@ -19,6 +20,7 @@ var userSchema = new mongoose.Schema({
 });
 
 userSchema.virtual('credentials.exerciseDotCom.plainPassword').get(function () {
+	log.debug('decoding user info');
 	return cryptoJs.AES.decrypt(this.credentials.exerciseDotCom.password, config.encryptionKey).toString(cryptoJs.enc.Utf8);
 });
 

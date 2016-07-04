@@ -1,7 +1,9 @@
 'use strict';
+var log = require('../misc/logger');
 
 module.exports = class {
 	transform(workouts) {
+		log.info('unified logger being used');
 		var transformed = [];
 
 		for (var i in workouts) {

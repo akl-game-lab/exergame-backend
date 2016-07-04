@@ -1,6 +1,7 @@
 var LocalStrategy   = require('passport-local').Strategy;
 var User = require('../models/user');
 var bCrypt = require('bcrypt-nodejs');
+var log = require('../misc/logger');
 
 module.exports = function (passport) {
 
@@ -13,12 +14,12 @@ module.exports = function (passport) {
 			User.findOne({ username:  username }, function (err, user) {
 				// In case of any error, return using the done method
 				if (err) {
-					console.log('Error in SignUp: ' + err);
+					log.error('Error in SignUp: ' + err);
 					return done(err);
 				}
 				// already exists
 				if (user) {
-					console.log('User already exists with username: ' + username);
+					log.debug('User already exists with username: ' + username);
 					return done(null, false, req.flash('message', 'User Already Exists'));
 				} else {
 					// if there is no user with that email
@@ -35,11 +36,11 @@ module.exports = function (passport) {
 					// save the user
 					newUser.save(function (err) {
 						if (err) {
-							console.log('Error in Saving user: ' + err);
+							log.error('Error in Saving user: ' + err);
 							throw err;
 						}
 
-						console.log('User Registration succesful');
+						log.info('User Registration succesful');
 						return done(null, newUser);
 					});
 				}

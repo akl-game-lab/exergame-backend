@@ -1,8 +1,10 @@
 var UnifiedTransformer = require('./UnifiedTransformer');
 var HsmTransformer = require('./HsmTransformer');
 var RawTransformer = require('./RawTransformer');
+var log = require('../misc/logger');
 
 module.exports = function (format) {
+	log.debug('transformer factory being used');
 	switch (format) {
 		case 'hsm':
 			return new HsmTransformer();
