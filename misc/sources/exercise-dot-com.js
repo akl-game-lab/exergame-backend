@@ -35,7 +35,7 @@ module.exports = {
 				if (retrievedData.hasOwnProperty('error')) {
 					log.error(retrievedData.error);
 				} else {
-					log.info('Data successfully retrieved')
+					log.info('Data successfully retrieved');
 					saveData(email, retrievedData, callback);
 				}
 			}
