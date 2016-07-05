@@ -7,15 +7,16 @@ module.exports = function () {
 	var debug = require('debug')('exergaming-backend:server');
 	var http = require('http');
 	var config = require('./config');
+	var log = require('./misc/logger');
 
 	/**
 	* Check if the encryption key environement variable is set.
 	*/
 
 	if(!config.encryptionKey) {
-		console.error('encryptionKey config value not set!');
-		console.error('If this is your first time running the system, you may set this to anything.');
-		console.error('If your database has already been set up, it will not work without the correct key.');
+		log.error('encryptionKey config value not set!');
+		log.error('If this is your first time running the system, you may set this to anything.');
+		log.error('If your database has already been set up, it will not work without the correct key.');
 		process.exit(1);
 	}
 
@@ -74,11 +75,11 @@ module.exports = function () {
 		// handle specific listen errors with friendly messages
 		switch (error.code) {
 			case 'EACCES':
-				console.error(bind + ' requires elevated privileges');
+				log.error(bind + ' requires elevated privileges');
 				process.exit(1);
 				break;
 			case 'EADDRINUSE':
-				console.error(bind + ' is already in use');
+				log.error(bind + ' is already in use');
 				process.exit(1);
 				break;
 			default:

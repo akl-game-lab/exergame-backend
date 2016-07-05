@@ -1,39 +1,41 @@
 var ExerciseDotCom = require('../../models/sources/exercise-dot-com');
+var log = require('../../misc/logger');
 const exec = require('child_process').exec;
 
 module.exports = {
 	verifyExerciseDotCom: function (username, password, callback) {
-		console.log(`casperjs verify-exercise-dot-com.js --uname="${username}" --pword="${password}"`);
+		log.info(`casperjs verify-exercise-dot-com.js --uname="${username}" --pword="${password}"`);
 		const child = exec(`pwd && casperjs exercise-dot-com.js --uname="${username}" --pword="${password}"`,
 		{
 			cwd: './misc/casper'
 		},
 		(error, stdout, stderr) => {
-			console.log(`stdout: ${stdout}`);
-			console.log(`stderr: ${stderr}`);
-			console.log(`error: ${error}`);
+			log.info(`stdout: ${stdout}`);
+			log.warn(`stderr: ${stderr}`);
+			log.error(`error: ${error}`);
 			callback(stdout);
 		});
 	},
 
 	retrieveExerciseData: function (email, username, password, callback) {
-		console.log(`casperjs exercise-dot-com.js --uname="${username}" --pword="${password}"`);
+		log.info(`casperjs exercise-dot-com.js --uname="${username}" --pword="${password}"`);
 		const child = exec(`pwd && casperjs exercise-dot-com.js --uname="${username}" --pword="${password}"`,
 		{
 			cwd: './misc/casper'
 		},
 		(error, stdout, stderr) => {
-			console.log(`stdout: ${stdout}`);
-			console.log(`stderr: ${stderr}`);
+			log.info(`stdout: ${stdout}`);
+			log.warn(`stderr: ${stderr}`);
 			if (error !== null) {
-				console.error(`exec error: ${error}`);
+				log.error(`exec error: ${error}`);
 			} else {
 				var retrievedData = JSON.parse(stdout.substr(stdout.search(/[\{\[]/))); // Find start of json.
-				console.log('Retrieved exercise data, saving...');
-				console.log(retrievedData);
+				log.info('Retrieved exercise data, saving...');
+				log.verbose(retrievedData);
 				if (retrievedData.hasOwnProperty('error')) {
-					console.error(retrievedData.error);
+					log.error(retrievedData.error);
 				} else {
+					log.info('Data successfully retrieved');
 					saveData(email, retrievedData, callback);
 				}
 			}
@@ -50,7 +52,7 @@ function saveData(email, data) {
 function saveWorkout(email, data) {
 	ExerciseDotCom.count({ workoutId: data.id }, function (err, count) {
 		if (err) {
-			console.error(err);
+			log.error(err);
 		} else if (count === 0) {
 			// If workout is new, save to DB.
 			var newData = new ExerciseDotCom({
@@ -63,9 +65,9 @@ function saveWorkout(email, data) {
 
 			newData.save(function (err) {
 				if (err) {
-					console.error(err);
+					log.error(err);
 				} else {
-					console.log('Workout saved');
+					log.info('Workout saved');
 				}
 			});
 		}
