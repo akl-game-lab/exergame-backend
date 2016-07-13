@@ -6,7 +6,6 @@ var fs = require('fs');
 var fname = new Date().getTime() + '.txt';
 var x = require('casper').selectXPath;
 var save = fs.pathJoin(fs.workingDirectory, 'execisejson', fname);
-var log = require('../logger');
 
 
 casper.userAgent('Mozilla/4.0 (comptible; MSIE 6.0; Windows NT 5.1)');
@@ -38,7 +37,7 @@ casper.thenOpen(apiURL, function(){
 	//base64encode makes an http request
 	var contents = atob(this.base64encode(apiURL));
 
-	log.verbose(contents);
+	console.log(contents);
 
 	});
 });
