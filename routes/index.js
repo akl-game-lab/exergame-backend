@@ -65,6 +65,16 @@ module.exports = function (passport) {
 		res.render('settings', { user: req.user });
 	});
 
+	router.get('/mod', function (req, res) {
+		log.info('mod page requested');
+		res.render('mod');
+	});
+
+	router.get('/mod/download', function (req, res) {
+		log.info('mod download requested');
+		res.redirect('https://s3-ap-southeast-2.amazonaws.com/skyrim-exergaming-mod/Skyrim-Files-v20160716.zip');
+	});
+
 	router.post('/settings', isAuthenticated, function (req, res) {
 		var username = req.body['credentials.exerciseDotCom.username'] || undefined;
 		var password = req.body['credentials.exerciseDotCom.password'] || undefined;
