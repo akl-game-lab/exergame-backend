@@ -1,42 +1,90 @@
 extends layout
 
 block content
-	h1 How to install the mod
-	h2 ACCOUNT SETUP INSTRUCTIONS
-	ol
-		li If you do not have an exercise.com account, create one 
-			a(href=' https://www.exercise.com') here.
-		li Create an account on the 
-			a(href='../signup') Exergaming Portal.
-		li Click register tracker and select exercise.com.
-		li Enter your exercise.com account details and click register, this may take a few minutes to process.
+	div(style='margin-left: 16px')
+		h1 Where to Get the Mod
+		a(class='btn btn-primary' href='./mod/download') Here!
+		h1 How to Install the Mod
+		h2 Account Setup Instructions
+		ol
+			li If you do not have an exercise.com account, ceate one 
+				a(href='https://www.exercise.com') here.
+			li Create an account on the 
+				a(href='../signup') Exergaming Portal.
+			li Click register tracker and select exercise.com.
+			li Enter your exercise.com account details and click register, this may take a few minutes to process.
 
-	h2 LOGGING WORKOUTS
-	ol
-		li Log into exercise.com using the account you created earlier.
-		li Log your workout by pressing the “Log Workout” button.
-		li Your exercise will be available in skyrim within 20 minutes, or after pressing the force fetch button.
+		h2 Logging Workouts
+		ol
+			li Log into exercise.com using the account you created earlier.
+			li Log your workout by pressing the “Log Workout” button.
+			li Your exercise will be available in skyrim within 20 minutes, or after pressing the force fetch button.
 
-	h2 TO INSTALL
-	ol
-		li Install Nexus Mod Manager 
-			a(href='​http://www.nexusmods.com/skyrim/mods/modmanager/​') here
-			, Create an account if necessary.
-		li Install SKSE
-			ol
-				li Download 
-					a(href='​http://skse.silverlock.org/beta/skse_1_07_03_installer.exe') SKSE
-				li Run the installer
-		li Install SkyUI
-			ol ​
-				li Downaload 
-					a(href='http://www.nexusmods.com/skyrim/mods/3863/​') SkyUI
-				li Follow installation instructions there, make sure to activate the mod in the nexus mod manager.
-		li Download and unzip the 
-			a(href='./mod/download') latest version of the mod
-			, move the Data folder to the [steam install directory]\steamapps\common\Skyrim (Usually at C:\Program Files (x86)\Steam\steamapps\common\Skyrim). Copy and replace as needed.
+		h2 To Install
+		ol
+			li Create an account on the Nexus Forums 
+				a(href='https://forums.nexusmods.com/index.php?app=core&module=global&section=register') here
+				ul
+					li Scroll to the bottom of the page and click "Create Account"
+					li Enter required information and agree to "Terms of Use"
+					li Click "Create Account"
+					li Validate the account with the email that was sent to the specified email address
+			li Install Nexus Mod Manager 
+				a(href='http://nmm.nexusmods.com/Releases/4.5/Nexus%20Mod%20Manager-0.61.23.exe') Windows Vista, 7, 8 and 10
+				span  | 
+				a(href='http://nmm.nexusmods.com/Releases/legacy/Nexus%20Mod%20Manager-legacy-0.52.3.exe') Windows XP
+				ul
+					li Run the installer after it finished downloading
+					li Select preferred language
+					li Agree to License Agreement
+					li Click "Next"
+					li Select the directory you would like to install the mod manager to and click "Next"
+					li Create desktop and/or quick launch shortcut if desired and click "Next"
+					li Click "Install"
+					li Click "Next"
+					li Deselect "Launch Nexus Mod Manager" if desired and click "Finish"
 
-	h2 TO USE
-	p Launch Skyrim, making sure to check Data Files in the launcher for P4PJakTanNPC.esp, check/enable this if not checked already. Click OK and press PLAY.
+			li Using the Mod Manager
+				ul
+					li Launch the nexus mod manager
+					li Scan for installed games
+					li Select Skyrim and click "OK"
+					li Click the red man in the bottom left to log in
+					li Enter account details and click "Login"
+			li Install SKSE: 
+				a(href='http://skse.silverlock.org/beta/skse_1_07_03_installer.exe') Installer
+				ul
+					li Run the downloaded installer
+					li Leave the install directory as the default unless Skyrim has been installed in a different directory
+					li Click "Next"
+					li Deselect "Desktop Shortcut" if desired and click "Install"
+					li Click "Close" after installation is finished
+			li Install SkyUI from 
+				a(href='http://www.nexusmods.com/skyrim/mods/3863/?') here
+				p A) Install with Nexus Mod Manager
+				ul
+					li Click "DOWNLOAD(NMM)" near the top of the page
+					li Click "CONTINUE WITH MY DOWNLOAD"
+					li Click "Launch Application"
+					li After the mod manager finished downloading go to the "Mods" tab
+					li Open the "User interfaces" category directory tree
+					li Double click "SkyUI" or right click and select "Activate"
+					li In the "Plugins" tab make sure that "SkyUI.esp" is enabled
+				p B) Install Manually
+				ul
+					li Click "DOWNLOAD(MANUAL)" near the top of the page
+					li Click "download manually" on the latest version under "MAIN FILES"
+					li Click "CONTINUE WITH MY DOWNLOAD"
+					li Extract the content of the downloaded zip file to the [steam install directory]\steamapps\common\Skyrim (Usually at C:\Program Files (x86)\Steam\steamapps\common\Skyrim)
+					li Launch the nexus mod manager
+					li In the "Plugins" tab make sure the "SkyUI.esp" is enabled
+			li Download and install the latest version of the exergaming mod from 
+				a(href='./mod/download') here
+				ul
+					li Open the zip file and copy the "Data" folder to [steam install directory]\steamapps\common\Skyrim (Usually at C:\Program Files (x86)\Steam\steamapps\common\Skyrim)
+					li If updating from an older version select "copy and replace" as needed.
+					li Launch the nexus mod manager
+					li In the "Plugins" tab make sure the "P4PJakTanNPC.esp" is enabled
 
-	p When in game, open the Exergaming menu in Mod Configuration menu. This is available from the in game menu. Turn the mod on from here. You will be asked to enter a username. Enter the email address you set up previously in the portal.
+		h2 To Use
+		p When in game, open the Exergaming menu in Mod Configuration menu. This is available from the in game menu. Turn the mod on from here. You will be asked to enter a username. Enter the email address you set up previously in the portal.
