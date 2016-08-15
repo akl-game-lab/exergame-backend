@@ -56,10 +56,23 @@ router.post('/login', passport.authenticate('local', {
 router.get('/:id/forceUpdate', function (req, res, next) {
 	var userId = decodeURIComponent(req.params.id);
 	log.info('fetching data from exercise service with force update');
-	getByEmail(userId);
-	res.send({
-		data: {
-			started: 'true'
+	User.find({
+		email: userId
+	}, function (err, users) {
+		if (users.length === 0) {
+			res.send({
+				data: {
+					errorCode: '404',
+					errorMessage: 'User not found'
+				}
+			});
+		} else {
+			getByEmail(userId);
+			res.send({
+				data: {
+					started: 'true'
+				}
+			});
 		}
 	});
 });
