@@ -1,4 +1,5 @@
 var LocalStrategy   = require('passport-local').Strategy;
+var uuid = require('uuid');
 var User = require('../models/user');
 var bCrypt = require('bcrypt-nodejs');
 var log = require('../misc/logger');
@@ -10,6 +11,9 @@ module.exports = function (passport) {
 	},
 	function (req, username, password, done) {
 		var findOrCreateUser = function () {
+			if (username === 'Username') {
+				username = uuid.v4();
+			}
 			// find a user in Mongo with provided username
 			User.findOne({'$or': [{ username:  username }, {email: req.param('email')}]}, function (err, user) {
 				// In case of any error, return using the done method
