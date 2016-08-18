@@ -183,7 +183,7 @@ describe('Index', function() {
 
 			var loginData = {
 				password: 'TestPassword',
-				username: 'TestUser'
+				username: 'test@example.com'
 			};
 
 			request(url)
@@ -200,7 +200,7 @@ describe('Index', function() {
 		it('should successfully log out', function (done)	{
 			var loginData = {
 				password: 'TestPassword',
-				username: 'TestUser'
+				username: 'test@example.com'
 			};
 
 			request(url)
