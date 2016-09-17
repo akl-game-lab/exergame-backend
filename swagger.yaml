@@ -1,0 +1,240 @@
+swagger: "2.0"
+info:
+  title: exergaming-backend
+  description: An API
+  version: v0.1.0
+  contact:
+    url: "http://gamelab.ac.nz"
+    name: "UoA Game Lab"
+    email: "scur778@aucklanduni.ac.nz"
+  license:
+    name: "MIT"
+    url: "http://example.com/license/goes/here"
+tags:
+  -
+    name: "default"
+    description: "Standard exergaming"
+  -
+    name: "mod"
+    description: "Operations related to the Skyrim Exergaming mod."
+  -
+    name: "users"
+    description: "Data related to specific users"
+paths:
+  /:
+    get:
+      tags:
+        - "default"
+      summary: Returns the login page
+      produces:
+        - text/html
+      responses:
+        "200":
+          description: The request was fulfilled
+  /login:
+    # get:
+    #   tags:
+    #     - "default"
+    #   summary: Renders the login page
+    #   produces:
+    #     - text/html
+    #   responses:
+    #     "200":
+    #       description: The request was fulfilled
+    post:
+      tags:
+        - "default"
+      summary: Authenticates a user
+      produces:
+        - text/html
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - description: Username of the user.
+          name: username
+          type: string
+          required: true
+          in: formData
+        - description: Password of the user.
+          name: password
+          type: string
+          required: true
+          in: formData
+      responses:
+        "302":
+          description: Login was successful, user will be redirected to their home page.
+  /signup:
+    get:
+      tags:
+        - "default"
+      summary: Renders the login page
+      produces:
+        - text/html
+      responses:
+        "200":
+          description: The request was fulfilled
+    post:
+      tags:
+        - "default"
+      summary: Creates a user
+      produces:
+        - text/html
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - description: Username of the user.
+          name: username
+          type: string
+          required: true
+          in: formData
+        - description: Password of the user.
+          name: password
+          type: string
+          required: true
+          in: formData
+        - description: Email address of the user.
+          name: email
+          type: string
+          required: true
+          in: formData
+        - description: First name of the user.
+          name: firstName
+          type: string
+          required: true
+          in: formData
+        - description: Last name of the user.
+          name: lastName
+          type: string
+          required: true
+          in: formData
+      responses:
+        "302":
+          description: Sign up was successful, user will be redirected to their home page.
+  /home:
+    get:
+      tags:
+        - "default"
+      summary: Renders the users homepage if they are logged in.
+      produces:
+        - text/html
+      responses:
+        "200":
+          description: The request was fulfilled
+        "302":
+          description: The user is not authenticated, they will be redirected to the login page.
+  /signout:
+    get:
+      tags:
+        - "default"
+      summary: Logs the user out.
+      produces:
+        - text/html
+      responses:
+        "302":
+          description: The sign out was successful, the user will be directed to the login page.
+  /settings:
+    get:
+      tags:
+        - "default"
+      summary: Renders the settings page if a user is logged in.
+      produces:
+        - text/html
+      responses:
+        "200":
+          description: The request was fulfilled
+    post:
+      tags:
+        - "default"
+      summary: Updates for a user, if they are logged in.
+      produces:
+        - text/html
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - description: Exercise.com Username of the user.
+          name: credentials.exerciseDotCom.username
+          type: string
+          required: true
+          in: formData
+        - description: Exercise.com Password of the user.
+          name: credentials.exerciseDotCom.password
+          type: string
+          required: true
+          in: formData
+      responses:
+        "302":
+          description: Settings update was successful, user will be redirected to their home page.
+  /mod:
+    get:
+      tags:
+        - "mod"
+      summary: Renders the mod information and intruction page.
+      produces:
+        - text/html
+      responses:
+        "200":
+          description: The request was fullfilled.
+  /download:
+    get:
+      tags:
+        - "mod"
+      summary: Redirects the user to the mod download on S3.
+      produces:
+        - application/octet-stream
+      responses:
+        "302":
+          description: The request was fullfilled.
+  /user/{id}/forceUpdate:
+    get:
+      tags:
+        - "users"
+      summary: Triggers an update for the specified user, this takes around two minutes.
+      produces:
+        - application/json
+      parameters:
+        - description: The user's url encoded email address.
+          name: id
+          type: string
+          in: path
+          required: true
+      responses:
+        "200":
+          description: The update was started successfully
+        "404":
+          description: The specified user was not found.
+  /user/{id}/workouts/{format}/{from}/{to}:
+    get:
+      tags:
+        - "users"
+      summary: Triggers an update for the specified user, this takes around two minutes.
+      produces:
+        - application/json
+      parameters:
+        - description: The user's url encoded email address.
+          name: id
+          type: string
+          in: path
+          required: true
+        - description: "The expected exercise data format. Must be a supported format (one of: 'hsm', 'unified', or 'raw)."
+          name: format
+          type: string
+          in: path
+          required: true
+        - description: The start date of the requested data in unix sexonds.
+          name: from
+          type: number
+          in: path
+          required: true
+        - description: The end date of the requested data in unix sexonds.
+          name: to
+          type: number
+          in: path
+          required: true
+      responses:
+        "200":
+          description: The update was started successfully.
+        "400":
+          description: One of the specified dates was invalid.
+        "404":
+          description: The specified user or format was not found.
+definitions: {}
