@@ -87,6 +87,13 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 		data: {}
 	};
 
+	log.debug(`Decoded request: /${userId}/workouts/${format}/${from}/${to}`);
+
+	if (Math.abs(to - (Date.now() / 1000)) > 60) {
+		var behind = (Date.now() / 1000) - to;
+		log.warn(`to date out from current date. ${behind} seconds behind.`);
+	}
+
 	log.debug('transformer class instantiated');
 	var transformer = transformerFactory(format);
 
