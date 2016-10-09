@@ -87,7 +87,7 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 		data: {}
 	};
 
-	log.debug(`Decoded request: /${userId}/workouts/${format}/${from}/${to}`);
+	log.info(`Decoded request: /${userId}/workouts/${format}/${from}/${to}`);
 
 	if (Math.abs(to - (Date.now() / 1000)) > 60) {
 		var behind = (Date.now() / 1000) - to;
@@ -132,6 +132,8 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 				log.info('workouts found, transforming and sending');
 				sendData.data.workouts = transformer.transform(workouts);
 
+				log.info(sendData);
+
 				// Return data.
 				res.send(sendData);
 			});
@@ -141,6 +143,7 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 				errorMessage: 'Invalid date(s)'
 			};
 			log.warn('invalid dates specified for workout fetch');
+			log.info(sendData);
 			res.status(400).send(sendData);
 		}
 	});
