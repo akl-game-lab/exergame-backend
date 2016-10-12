@@ -59,9 +59,22 @@ router.get('/:id/forceUpdate', function (req, res, next) {
 	User.find({
 		email: userId
 	}, function (err, users) {
-		if (users.length === 0) {
-			res.send({
+		if (err) {
+			log.error('Force update database error');
+			log.error(err);
+			res.status(500).send({
 				data: {
+					started: 'false',
+					errorCode: '500',
+					errorMessage: 'Database error'
+				}
+			});
+		}
+		else if (users.length === 0) {
+			log.info('Force update 404 error.')
+			res.status(404).send({
+				data: {
+					started: 'false',
 					errorCode: '404',
 					errorMessage: 'User not found'
 				}
@@ -87,7 +100,7 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 		data: {}
 	};
 
-	log.debug(`Decoded request: /${userId}/workouts/${format}/${from}/${to}`);
+	log.info(`Decoded request: /${userId}/workouts/${format}/${from}/${to}`);
 
 	if (Math.abs(to - (Date.now() / 1000)) > 60) {
 		var behind = (Date.now() / 1000) - to;
@@ -132,6 +145,8 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 				log.info('workouts found, transforming and sending');
 				sendData.data.workouts = transformer.transform(workouts);
 
+				log.info(sendData);
+
 				// Return data.
 				res.send(sendData);
 			});
@@ -141,6 +156,7 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 				errorMessage: 'Invalid date(s)'
 			};
 			log.warn('invalid dates specified for workout fetch');
+			log.info(sendData);
 			res.status(400).send(sendData);
 		}
 	});
