@@ -59,9 +59,22 @@ router.get('/:id/forceUpdate', function (req, res, next) {
 	User.find({
 		email: userId
 	}, function (err, users) {
-		if (users.length === 0) {
-			res.send({
+		if (err) {
+			log.error('Force update database error');
+			log.error(err);
+			res.status(500).send({
 				data: {
+					started: 'false',
+					errorCode: '500',
+					errorMessage: 'Database error'
+				}
+			});
+		}
+		else if (users.length === 0) {
+			log.info('Force update 404 error.')
+			res.status(404).send({
+				data: {
+					started: 'false',
 					errorCode: '404',
 					errorMessage: 'User not found'
 				}
