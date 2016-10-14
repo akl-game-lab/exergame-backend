@@ -63,6 +63,7 @@ router.get('/:id/forceUpdate', function (req, res, next) {
 			log.error('Force update database error');
 			log.error(err);
 			res.status(500).send({
+				responseCode: '500',
 				data: {
 					started: 'false',
 					errorCode: '500',
@@ -71,8 +72,9 @@ router.get('/:id/forceUpdate', function (req, res, next) {
 			});
 		}
 		else if (users.length === 0) {
-			log.info('Force update 404 error.')
+			log.info('Force update 404 error.');
 			res.status(404).send({
+				responseCode: '404',
 				data: {
 					started: 'false',
 					errorCode: '404',
@@ -82,6 +84,7 @@ router.get('/:id/forceUpdate', function (req, res, next) {
 		} else {
 			getByEmail(userId);
 			res.send({
+				responseCode: '200',
 				data: {
 					started: 'true'
 				}
@@ -113,7 +116,18 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 	User.find({
 		email: userId
 	}, function (err, users) {
-		if (users.length === 0) {
+		if (err) {
+			log.error('workout request database error');
+			log.error(err);
+			res.status(500).send({
+				responseCode: '500',
+				data: {
+					errorMessage: err
+				}
+			});
+		}
+		else if (users.length === 0) {
+			sendData.responseCode = '404';
 			sendData.data = {
 				errorCode: '404',
 				errorMessage: 'User not found'
@@ -122,6 +136,7 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 			res.status(404).send(sendData);
 		} else if (!transformer) {
 			log.warn(`No such format: ${format}`);
+			sendData.responseCode = '404';
 			sendData.data = {
 				errorCode: '404',
 				errorMessage: `No such format: ${format}`
@@ -137,8 +152,14 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 			},
 			function (err, workouts) {
 				if (err) {
-					log.warn(err);
-					res.send(err);
+					log.error('workout request database error');
+					log.error(err);
+					res.status(500).send({
+						responseCode: '500',
+						data: {
+							errorMessage: err
+						}
+					});
 					return;
 				}
 
@@ -147,10 +168,14 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 
 				log.info(sendData);
 
+				sendData.successful = 'true';
+				sendData.responseCode = '200';
+
 				// Return data.
 				res.send(sendData);
 			});
 		} else {
+			sendData.responseCode = '400';
 			sendData.data = {
 				errorCode: '400',
 				errorMessage: 'Invalid date(s)'
