@@ -134,7 +134,7 @@ describe('/users', function() {
 		it('should return an empty workouts object if the user exists but has no data.', function(done) {
 			// Make the request
 			request(url)
-			.get('/users/example%40example.com/workouts/hsm/0/9999999999999')
+			.get('/users/example%40example.com/workouts/hsm/0/1476488494184')
 			// end handles the response
 			.end(function(err, res) {
 				assert.ifError(err);
@@ -281,7 +281,7 @@ describe('/users', function() {
 		it('should return an empty workouts object if the user exists but has no data.', function(done) {
 			// Make the request
 			request(url)
-			.get('/users/example%40example.com/workouts/unified/0/9999999999999')
+			.get('/users/example%40example.com/workouts/unified/0/1476488494184')
 			// end handles the response
 			.end(function(err, res) {
 				assert.ifError(err);
