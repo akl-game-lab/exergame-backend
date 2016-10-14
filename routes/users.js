@@ -59,7 +59,11 @@ router.get('/:id/forceUpdate', function (req, res, next) {
 	User.find({
 		email: userId
 	}, function (err, users) {
-		if (err) {
+		if (userId === 'null@gamelab.ac.nz') {
+			// For testing purposes
+			res.status(503).send(null);
+		}
+		else if (err || userId === 'database@gamelab.ac.nz') {
 			log.error('Force update database error');
 			log.error(err);
 			res.status(500).send({
@@ -71,7 +75,7 @@ router.get('/:id/forceUpdate', function (req, res, next) {
 				}
 			});
 		}
-		else if (users.length === 0) {
+		else if (users.length === 0 || userId === 'notfound@gamelab.ac.nz') {
 			log.info('Force update 404 error.');
 			res.status(404).send({
 				responseCode: '404',
@@ -116,7 +120,11 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 	User.find({
 		email: userId
 	}, function (err, users) {
-		if (err) {
+		if (userId === 'null@gamelab.ac.nz') {
+			// For testing purposes
+			res.status(503).send(null);
+		}
+		else if (err || userId === 'database@gamelab.ac.nz') {
 			log.error('workout request database error');
 			log.error(err);
 			res.status(500).send({
@@ -126,7 +134,7 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 				}
 			});
 		}
-		else if (users.length === 0) {
+		else if (users.length === 0 || userId === 'notfound@gamelab.ac.nz') {
 			sendData.responseCode = '404';
 			sendData.data = {
 				errorCode: '404',
