@@ -71,7 +71,7 @@ router.get('/:id/forceUpdate', function (req, res, next) {
 			});
 		}
 		else if (users.length === 0) {
-			log.info('Force update 404 error.')
+			log.info('Force update 404 error.');
 			res.status(404).send({
 				data: {
 					started: 'false',
@@ -97,6 +97,8 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 	var from = parseInt(req.params.from); // In seconds for Skyrim
 	var to = parseInt(req.params.to); // In seconds for Skyrim
 	var sendData = {
+		successful: true,
+		status: 200,
 		data: {}
 	};
 
