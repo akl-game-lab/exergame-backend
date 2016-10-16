@@ -50,7 +50,7 @@ function saveData(email, data) {
 }
 
 function saveWorkout(email, data) {
-	ExerciseDotCom.count({ workoutId: data.id }, function (err, count) {
+	ExerciseDotCom.count({ userEmail: email, workoutId: data.id }, function (err, count) {
 		if (err) {
 			log.error(err);
 		} else if (count === 0) {
@@ -67,7 +67,7 @@ function saveWorkout(email, data) {
 				if (err) {
 					log.error(err);
 				} else {
-					log.info('Workout saved');
+					log.info(`New workout saved for user: ${email}`);
 				}
 			});
 		}
