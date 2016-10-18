@@ -31,7 +31,7 @@ module.exports = {
 			} else {
 				var retrievedData = JSON.parse(stdout.substr(stdout.search(/[\{\[]/))); // Find start of json.
 				log.info('Retrieved exercise data, saving...');
-				log.verbose(retrievedData);
+				log.debug(retrievedData);
 				if (retrievedData.hasOwnProperty('error')) {
 					log.error(retrievedData.error);
 				} else {
