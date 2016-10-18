@@ -10,9 +10,15 @@ module.exports = {
 			cwd: './misc/casper'
 		},
 		(error, stdout, stderr) => {
-			log.info(`stdout: ${stdout}`);
-			log.warn(`stderr: ${stderr}`);
-			log.error(`error: ${error}`);
+			if (error) {
+				log.error(`exec error ${error}`);
+			} else {
+				log.info(`Checked exercise.com account of ${username}`)
+				log.debug(`stdout: ${stdout}`);
+				if (stderr) {
+					log.warn(`stderr: ${stderr}`);
+				}
+			}
 			callback(stdout);
 		});
 	},
@@ -24,11 +30,14 @@ module.exports = {
 			cwd: './misc/casper'
 		},
 		(error, stdout, stderr) => {
-			log.info(`stdout: ${stdout}`);
-			log.warn(`stderr: ${stderr}`);
-			if (error !== null) {
+			if (error) {
 				log.error(`exec error: ${error}`);
 			} else {
+				log.debug(`stdout: ${stdout}`);
+				if (stderr) {
+					log.warn(`stderr: ${stderr}`);
+				}
+
 				var retrievedData = JSON.parse(stdout.substr(stdout.search(/[\{\[]/))); // Find start of json.
 				log.info('Retrieved exercise data, saving...');
 				log.debug(retrievedData);
