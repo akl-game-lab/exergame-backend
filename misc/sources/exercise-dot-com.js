@@ -4,7 +4,7 @@ const exec = require('child_process').exec;
 
 module.exports = {
 	verifyExerciseDotCom: function (username, password, callback) {
-		log.info(`casperjs verify-exercise-dot-com.js --uname="${username}" --pword="${password}"`);
+		log.info(`casperjs verify-exercise-dot-com.js --uname="${username}" --pword="{redacted}"`);
 		const child = exec(`pwd && casperjs exercise-dot-com.js --uname="${username}" --pword="${password}"`,
 		{
 			cwd: './misc/casper'
@@ -18,7 +18,7 @@ module.exports = {
 	},
 
 	retrieveExerciseData: function (email, username, password, callback) {
-		log.info(`casperjs exercise-dot-com.js --uname="${username}" --pword="${password}"`);
+		log.info(`casperjs exercise-dot-com.js --uname="${username}" --pword="{redacted}"`);
 		const child = exec(`pwd && casperjs exercise-dot-com.js --uname="${username}" --pword="${password}"`,
 		{
 			cwd: './misc/casper'
