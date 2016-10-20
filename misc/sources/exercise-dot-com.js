@@ -4,34 +4,43 @@ const exec = require('child_process').exec;
 
 module.exports = {
 	verifyExerciseDotCom: function (username, password, callback) {
-		log.info(`casperjs verify-exercise-dot-com.js --uname="${username}" --pword="${password}"`);
+		log.info(`casperjs verify-exercise-dot-com.js --uname="${username}" --pword="{redacted}"`);
 		const child = exec(`pwd && casperjs exercise-dot-com.js --uname="${username}" --pword="${password}"`,
 		{
 			cwd: './misc/casper'
 		},
 		(error, stdout, stderr) => {
-			log.info(`stdout: ${stdout}`);
-			log.warn(`stderr: ${stderr}`);
-			log.error(`error: ${error}`);
+			if (error) {
+				log.error(`exec error ${error}`);
+			} else {
+				log.info(`Checked exercise.com account of ${username}`)
+				log.debug(`stdout: ${stdout}`);
+				if (stderr) {
+					log.warn(`stderr: ${stderr}`);
+				}
+			}
 			callback(stdout);
 		});
 	},
 
 	retrieveExerciseData: function (email, username, password, callback) {
-		log.info(`casperjs exercise-dot-com.js --uname="${username}" --pword="${password}"`);
+		log.info(`casperjs exercise-dot-com.js --uname="${username}" --pword="{redacted}"`);
 		const child = exec(`pwd && casperjs exercise-dot-com.js --uname="${username}" --pword="${password}"`,
 		{
 			cwd: './misc/casper'
 		},
 		(error, stdout, stderr) => {
-			log.info(`stdout: ${stdout}`);
-			log.warn(`stderr: ${stderr}`);
-			if (error !== null) {
+			if (error) {
 				log.error(`exec error: ${error}`);
 			} else {
+				log.debug(`stdout: ${stdout}`);
+				if (stderr) {
+					log.warn(`stderr: ${stderr}`);
+				}
+
 				var retrievedData = JSON.parse(stdout.substr(stdout.search(/[\{\[]/))); // Find start of json.
 				log.info('Retrieved exercise data, saving...');
-				log.verbose(retrievedData);
+				log.debug(retrievedData);
 				if (retrievedData.hasOwnProperty('error')) {
 					log.error(retrievedData.error);
 				} else {
