@@ -17,7 +17,12 @@ schedule.scheduleJob({ minute: [0, 20, 40] }, function () {
 
 function getUserData() {
 	log.info('Attempting to find user data');
-	User.find(function (err, users) {
+	User.find({
+		lastPlayed: {
+			'$gt': Date.now() - 1000 * 60 * 60 * 24 * 7 // Has played in the last week.
+		}
+	},
+	function (err, users) {
 		if (err) {
 			log.error(err);
 		} else {
