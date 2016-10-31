@@ -8,9 +8,9 @@ Gathers data from fitness tracking services and exposes it for use in video game
 
 ### Installation
 ```
-# Install node.js v4 (and npm)
-# Install mongodb
-# Install PhantomJS headless browser
+# Install node.js v4 (and npm) (https://nodejs.org)
+# Install mongodb (https://www.mongodb.com/download-center)
+# Install PhantomJS headless browser (http://phantomjs.org)
 npm install -g casperjs
 npm install
 ```
@@ -21,6 +21,13 @@ Copy config.js.sample to config.js and set encryption key to some value which is
 ./bin/www
 ```
 
+### Running in the Background
+
+To run in the background, use a program called forever.js
+```
+npm install -g forever
+forever start bin/www
+```
 
 ## Contribution Guide
 The code structure and the functions of the various classes are fairly self explanatory, however some parts do need explaining
