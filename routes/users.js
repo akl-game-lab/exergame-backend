@@ -179,6 +179,9 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 				sendData.successful = 'true';
 				sendData.responseCode = '200';
 
+				users[0].lastPlayed = Date.now();
+				users[0].save();
+
 				// Return data.
 				res.send(sendData);
 			});
