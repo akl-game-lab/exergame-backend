@@ -12,11 +12,17 @@ module.exports = {
 		(error, stdout, stderr) => {
 			if (error) {
 				log.error(`exec error ${error}`);
+				if (error.includes('segfault')) {
+					process.exit(1);
+				}
 			} else {
 				log.info(`Checked exercise.com account of ${username}`)
 				log.debug(`stdout: ${stdout}`);
 				if (stderr) {
 					log.warn(`stderr: ${stderr}`);
+					if (stderr.includes('segfault')) {
+						process.exit(1);
+					}
 				}
 			}
 			callback(stdout);
@@ -32,10 +38,16 @@ module.exports = {
 		(error, stdout, stderr) => {
 			if (error) {
 				log.error(`exec error: ${error}`);
+				if (error.includes('segfault')) {
+					process.exit(1);
+				}
 			} else {
 				log.debug(`stdout: ${stdout}`);
 				if (stderr) {
 					log.warn(`stderr: ${stderr}`);
+					if (stderr.includes('segfault')) {
+						process.exit(1);
+					}
 				}
 
 				var retrievedData = JSON.parse(stdout.substr(stdout.search(/[\{\[]/))); // Find start of json.
