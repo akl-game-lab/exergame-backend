@@ -4,7 +4,6 @@ before_install:
 - tar jxf phantomjs-2.1.1-linux-x86_64.tar.bz2
 - export PATH=$PATH:$PWD/phantomjs-2.1.1-linux-x86_64/bin
 - npm install -g casperjs
-- npm install -g mocha
 - "echo 'module.exports = {encryptionKey: process.env.TRAVIS_SECRET_KEY};' > config.js"
 services:
 - mongodb
