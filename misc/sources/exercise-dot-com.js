@@ -2,10 +2,13 @@ var ExerciseDotCom = require('../../models/sources/exercise-dot-com');
 var log = require('../../misc/logger');
 var request = require('request');
 var cheerio = require('cheerio');
-request = request.defaults({jar: true});
 
 module.exports = {
 	verifyExerciseDotCom: function (username, password, callback) {
+	    // Set up the Cookie jar
+        var j = request.jar();
+        request = request.defaults({jar: j});
+
         request.get("https://www.exercise.com/users/sign_in", function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 log.info("https://www.exercise.com/users/sign_in, successfully loaded, retrieving authenticity token.");
@@ -44,6 +47,10 @@ module.exports = {
 	},
 
 	retrieveExerciseData: function (email, username, password, callback) {
+        // Set up the Cookie jar
+        var j = request.jar();
+        request = request.defaults({jar: j});
+
 		request.get("https://www.exercise.com/users/sign_in", function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 log.info("https://www.exercise.com/users/sign_in, successfully loaded, retrieving authenticity token.");
