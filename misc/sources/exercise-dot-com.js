@@ -2,6 +2,7 @@ var ExerciseDotCom = require('../../models/sources/exercise-dot-com');
 var log = require('../../misc/logger');
 var request = require('request');
 var cheerio = require('cheerio');
+request = request.defaults({jar: true});
 
 module.exports = {
 	verifyExerciseDotCom: function (username, password, callback) {
@@ -22,7 +23,7 @@ module.exports = {
                     "commit": "Log In"
                 }}, function(error, response, body){
                     if (!error && response.statusCode == 200 || 302) {
-                        log.info(body);
+                        log.debug(body);
                         $ = cheerio.load(body);
 						if ($("a").attr('href') == "https://www.exercise.com/dashboard") {
                             log.info("User: " + username + ", successfully authenticated on exercise.com");
@@ -60,16 +61,16 @@ module.exports = {
                     "commit": "Log In"
                 }}, function(error, response, body){
                     if (!error && response.statusCode == 200 || 302) {
-						log.info(body);
+                        log.debug(body);
 						$ = cheerio.load(body);
 						if ($("a").attr('href') == "https://www.exercise.com/dashboard") {
 							log.info("User: " + username + ", successfully authenticated on exercise.com");
 							// Retrieve user workouts.
 							request.get({url: "https://www.exercise.com/api/v2/workouts?all_fields=true", header: response.headers },  function (error, response, body) {
-								log.info(response.statusCode);
+								log.debug(response.statusCode);
 								if (!error && response.statusCode == 200 || 304) {
 									// Parse the JSON into the object.
-									log.info(body);
+									log.debug(body);
 									var retrievedData = JSON.parse(body);
                                     if (retrievedData.hasOwnProperty('error')) {
                                         log.error(retrievedData.error);

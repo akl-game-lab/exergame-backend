@@ -24,9 +24,9 @@ var isAuthenticated = function (req, res, next) {
 
 module.exports = function (passport) {
 
-	router.get('/testing', function (req, res) {
-		retrieveExerciseData('testgamelab@gmail.com', 'testgamelab@gmail.com', 'paulralph')
-    });
+    // router.get('/testing', function (req, res) {
+		// retrieveExerciseData('testgamelab@gmail.com', 'testgamelab@gmail.com', 'paulralph')
+    // });
 
 	/* GET login page. */
 	router.get('/', function (req, res) {
