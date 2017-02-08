@@ -1,66 +1,101 @@
 var ExerciseDotCom = require('../../models/sources/exercise-dot-com');
 var log = require('../../misc/logger');
-const exec = require('child_process').exec;
+var request = require('request');
+var cheerio = require('cheerio');
 
 module.exports = {
 	verifyExerciseDotCom: function (username, password, callback) {
-		log.info(`casperjs verify-exercise-dot-com.js --uname="${username}" --pword="{redacted}"`);
-		const child = exec(`pwd && casperjs exercise-dot-com.js --uname="${username}" --pword="${password}"`,
-		{
-			cwd: './misc/casper'
-		},
-		(error, stdout, stderr) => {
-			if (error) {
-				log.error(`exec error ${error}`);
-				if (error.includes('segfault')) {
-					process.exit(1);
-				}
-			} else {
-				log.info(`Checked exercise.com account of ${username}`)
-				log.debug(`stdout: ${stdout}`);
-				if (stderr) {
-					log.warn(`stderr: ${stderr}`);
-					if (stderr.includes('segfault')) {
-						process.exit(1);
-					}
-				}
-			}
-			callback(stdout);
-		});
+        request.get("https://www.exercise.com/users/sign_in", function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                log.info("https://www.exercise.com/users/sign_in, successfully loaded, retrieving authenticity token.");
+
+                // Parse the returned HTML to find the authenticity token and return that value.
+                $ = cheerio.load(body);
+
+                // Send Post request to the page.
+                request.post({url:'https://www.exercise.com/users/sign_in', form: {
+                    "utf8": "✓",
+                    "authenticity_token": $("input[name='authenticity_token']").attr('value'),
+                    "user[email]": username,
+                    "user[password]": password,
+                    "user[remember_me]" : 0,
+                    "commit": "Log In"
+                }}, function(error, response, body){
+                    if (!error && response.statusCode == 200 || 302) {
+                        log.info(body);
+                        $ = cheerio.load(body);
+						if ($("a").attr('href') == "https://www.exercise.com/dashboard") {
+                            log.info("User: " + username + ", successfully authenticated on exercise.com");
+                            callback("");
+                        } else {
+                            log.info("Unable to authenticate user: " + username);
+                            callback("You need to sign in or sign up before continuing.");
+						}
+                    } else {
+                        log.info("Unable to authenticate user: " + username);
+                        callback("You need to sign in or sign up before continuing.");
+                    }
+                });
+            } else {
+                log.error("Error connecting to exercise.com");
+            }
+        });
 	},
 
 	retrieveExerciseData: function (email, username, password, callback) {
-		log.info(`casperjs exercise-dot-com.js --uname="${username}" --pword="{redacted}"`);
-		const child = exec(`pwd && casperjs exercise-dot-com.js --uname="${username}" --pword="${password}"`,
-		{
-			cwd: './misc/casper'
-		},
-		(error, stdout, stderr) => {
-			if (error) {
-				log.error(`exec error: ${error}`);
-				if (error.includes('segfault')) {
-					process.exit(1);
-				}
-			} else {
-				log.debug(`stdout: ${stdout}`);
-				if (stderr) {
-					log.warn(`stderr: ${stderr}`);
-					if (stderr.includes('segfault')) {
-						process.exit(1);
-					}
-				}
+		request.get("https://www.exercise.com/users/sign_in", function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                log.info("https://www.exercise.com/users/sign_in, successfully loaded, retrieving authenticity token.");
 
-				var retrievedData = JSON.parse(stdout.substr(stdout.search(/[\{\[]/))); // Find start of json.
-				log.info('Retrieved exercise data, saving...');
-				log.debug(retrievedData);
-				if (retrievedData.hasOwnProperty('error')) {
-					log.error(retrievedData.error);
-				} else {
-					log.info('Data successfully retrieved');
-					saveData(email, retrievedData, callback);
-				}
-			}
-		});
+                // Parse the returned HTML to find the authenticity token and return that value.
+                $ = cheerio.load(body);
+
+                // Send Post request to the page.
+                request.post({url:'https://www.exercise.com/users/sign_in', form: {
+                    "utf8": "✓",
+                    "authenticity_token": $("input[name='authenticity_token']").attr('value'),
+                    "user[email]": username,
+                    "user[password]": password,
+                    "user[remember_me]" : 0,
+                    "commit": "Log In"
+                }}, function(error, response, body){
+                    if (!error && response.statusCode == 200 || 302) {
+						log.info(body);
+						$ = cheerio.load(body);
+						if ($("a").attr('href') == "https://www.exercise.com/dashboard") {
+							log.info("User: " + username + ", successfully authenticated on exercise.com");
+							// Retrieve user workouts.
+							request.get({url: "https://www.exercise.com/api/v2/workouts?all_fields=true", header: response.headers },  function (error, response, body) {
+								log.info(response.statusCode);
+								if (!error && response.statusCode == 200 || 304) {
+									// Parse the JSON into the object.
+									log.info(body);
+									var retrievedData = JSON.parse(body);
+                                    if (retrievedData.hasOwnProperty('error')) {
+                                        log.error(retrievedData.error);
+                                    } else {
+                                        log.info('Data successfully retrieved');
+
+                                        // Store the information.
+                                        saveData(email, retrievedData, callback);
+                                    }
+								} else if (response.statusCode == 401) {
+									log.error("Unable to get workouts. Error 401, Unauthorized Access.");
+								}
+							});
+                        } else {
+                            log.error("Unable to authenticate user: " + username);
+                            callback("You need to sign in or sign up before continuing.");
+                        }
+                    } else {
+                        log.error("Unable to authenticate user: " + username);
+                        callback("You need to sign in or sign up before continuing.");
+                    }
+                });
+            } else {
+                log.error("Error connecting to exercise.com");
+            }
+        });
 	}
 };
 
@@ -88,7 +123,7 @@ function saveWorkout(email, data) {
 				if (err) {
 					log.error(err);
 				} else {
-					log.info(`New workout saved for user: ${email}`);
+					log.info("New workout saved for user: " +  email);
 				}
 			});
 		}
