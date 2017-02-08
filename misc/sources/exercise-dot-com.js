@@ -12,7 +12,7 @@ module.exports = {
 		(error, stdout, stderr) => {
 			if (error) {
 				log.error(`exec error ${error}`);
-				if (error.includes('segfault')) {
+				if (error.message.includes('segfault')) {
 					process.exit(1);
 				}
 			} else {
@@ -38,7 +38,7 @@ module.exports = {
 		(error, stdout, stderr) => {
 			if (error) {
 				log.error(`exec error: ${error}`);
-				if (error.includes('segfault')) {
+				if (error.message.includes('segfault')) {
 					process.exit(1);
 				}
 			} else {
