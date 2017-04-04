@@ -4,6 +4,8 @@ var verifyTask = require('../misc/sources/exercise-dot-com');
 var cryptoJs = require('crypto-js');
 var config = require('../config');
 var log = require('../misc/logger');
+var retrieveExerciseData = require('../misc/sources/exercise-dot-com').retrieveExerciseData;
+
 
 var isAuthenticated = function (req, res, next) {
 	log.info('User authentication');
@@ -21,6 +23,10 @@ var isAuthenticated = function (req, res, next) {
 };
 
 module.exports = function (passport) {
+
+    // router.get('/testing', function (req, res) {
+		// retrieveExerciseData('testgamelab@gmail.com', 'testgamelab@gmail.com', 'paulralph')
+    // });
 
 	/* GET login page. */
 	router.get('/', function (req, res) {
@@ -72,7 +78,7 @@ module.exports = function (passport) {
 
 	router.get('/mod/download', function (req, res) {
 		log.info('mod download requested');
-		res.redirect('http://skyrim-exergaming-mod.s3-website-ap-southeast-2.amazonaws.com');
+		res.sendFile('skyrimExergameMod.zip', {root: 'public'});
 	});
 
 	router.post('/settings', isAuthenticated, function (req, res) {
