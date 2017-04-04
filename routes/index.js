@@ -78,7 +78,7 @@ module.exports = function (passport) {
 
 	router.get('/mod/download', function (req, res) {
 		log.info('mod download requested');
-		res.redirect('http://skyrim-exergaming-mod.s3-website-ap-southeast-2.amazonaws.com');
+		res.sendFile('skyrimExergameMod.zip', {root: 'public'});
 	});
 
 	router.post('/settings', isAuthenticated, function (req, res) {
