@@ -11,6 +11,7 @@ module.exports = class {
 			var health = 0;
 			var stamina = 0;
 			var magicka = 0;
+			String information = "";
 
 			for (var j in workouts[i].data.workout_exercises) {
 				if (workouts[i].data.workout_exercises.hasOwnProperty(j)) {
@@ -18,13 +19,23 @@ module.exports = class {
 					if (exerciseData.hasOwnProperty('total_reps') && exerciseData.total_reps > 0) {
 						// Exercise has reps, add points to health.
 						health += exerciseData.total_points;
+						information += exerciseData.name;
+						information += ", Health + ";
+						information += String(exerciseData.total_points);
 					} else if (exerciseData.hasOwnProperty('distance') && typeof parseFloat(exerciseData.distance) === 'number' && parseFloat(exerciseData.distance) > 0) {
 						// Exercise has distance, add points to stamina
 						stamina += exerciseData.total_points;
+						information += exerciseData.name;
+						information += ", Stamina + ";
+						information += String(exerciseData.total_points);
 					} else {
 						// Otherwise, add points to magicka
 						magicka += exerciseData.total_points;
+						information += exerciseData.name;
+						information += ", Magicka + ";
+						information += String(exerciseData.total_points);
 					}
+
 				}
 			}
 
@@ -35,8 +46,9 @@ module.exports = class {
 				health: health,
 				stamina: stamina,
 				magicka: magicka,
-				workoutData: btoa(workouts[i])
-				//Assuming just add extra exercise.json information here
+				
+				//Assuming just add extra exercise.json information here, added a string to list exercise information
+				workoutData: information
 			});
 
 			workouts[i].used = true;
