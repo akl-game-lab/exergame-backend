@@ -34,7 +34,9 @@ module.exports = class {
 				workoutDate: workouts[i].data.workout_date, //seconds
 				health: health,
 				stamina: stamina,
-				magicka: magicka
+				magicka: magicka,
+				workoutData: btoa(workouts[i])
+				//Assuming just add extra exercise.json information here
 			});
 
 			workouts[i].used = true;
