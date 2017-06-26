@@ -46,8 +46,6 @@ module.exports = class {
 				health: health,
 				stamina: stamina,
 				magicka: magicka,
-				
-				//Assuming just add extra exercise.json information here, added a string to list exercise information
 				workoutData: workoutInfo
 			});
 
