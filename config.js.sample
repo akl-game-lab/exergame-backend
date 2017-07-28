@@ -1,3 +1,0 @@
-module.exports = {
-	encryptionKey: false // Set this on first run. THIS NEEDS TO BE KEPT SECRET! DO NOT COMMIT THIS FILE!
-};
