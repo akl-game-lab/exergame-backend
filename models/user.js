@@ -22,7 +22,12 @@ var userSchema = new mongoose.Schema({
 
 userSchema.virtual('credentials.exerciseDotCom.plainPassword').get(function () {
 	log.debug('decoding user info');
-	return cryptoJs.AES.decrypt(this.credentials.exerciseDotCom.password, config.encryptionKey).toString(cryptoJs.enc.Utf8);
+	if(this.credentials.exerciseDotCom.password != null) {
+		return cryptoJs.AES.decrypt(this.credentials.exerciseDotCom.password, config.encryptionKey).toString(cryptoJs.enc.Utf8);
+	} else {
+		return '';
+	}
+
 });
 
 module.exports = mongoose.model('User', userSchema);

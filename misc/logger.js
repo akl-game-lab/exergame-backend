@@ -1,5 +1,6 @@
 var winston = require('winston');
 var _ = require('underscore');
+var schedule = require('node-schedule');
 
 var currentDate = new Date().toISOString().replace(/T.+/, '');
 var options = {
@@ -44,5 +45,23 @@ for (var i = 0; i < process.argv.length; i++) {
 		}
 	}
 }
+
+schedule.scheduleJob({hour: 23, minute: 59, second: 30}, function () {
+	var newDate = new Date();
+	newDate.setDate(newDate.getDate() + 1);
+
+	logger.info(newDate)
+	logger.info('changed logging directory')
+	logger.configure({
+    transports: [
+			new (winston.transports.File)({
+				filename: './logs/' + newDate.toISOString().replace(/T.+/, '') + '.log',
+				json: false,
+				formatter: formatter
+			})
+    ]
+  })
+
+});
 
 module.exports = logger;
