@@ -1,9 +1,5 @@
 language: node_js
 before_install:
-- wget https://s3-ap-southeast-2.amazonaws.com/exergaming-ci/phantomjs-2.1.1-linux-x86_64.tar.bz2
-- tar jxf phantomjs-2.1.1-linux-x86_64.tar.bz2
-- export PATH=$PATH:$PWD/phantomjs-2.1.1-linux-x86_64/bin
-- npm install -g casperjs
 - "echo 'module.exports = {encryptionKey: process.env.TRAVIS_SECRET_KEY};' > config.js"
 services:
 - mongodb
