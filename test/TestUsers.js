@@ -10,7 +10,7 @@ var User = require('../models/user');
 var Workout = require('../models/sources/exercise-dot-com');
 
 describe('/users', function() {
-	var url = 'http://localhost:3000';
+	var url = 'http://localhost';
 
 	before(function(done) {
 		// In our tests we use the test db
@@ -170,7 +170,19 @@ describe('/users', function() {
 							magicka: 0,
 							stamina: 1001,
 							syncDate: 'Untestable',
-							workoutDate: '1463011200'
+							workoutDate: '1463011200',
+							workoutsRecord: [
+	              {
+	                'distance': '4.97',
+	                'duration': 0,
+	                'exerciseName': 'Running',
+	                'health': 0,
+	                'magicka': 0,
+	                'reps': 0,
+	                'sets': 0,
+	                'stamina': 1001
+	              }
+	           	],
 						}
 					]
 				});

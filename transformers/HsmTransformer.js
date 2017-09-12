@@ -5,7 +5,7 @@ module.exports = class {
 	transform(workouts) {
 		log.debug('HSM transformer being used');
 		var transformed = [];
-		var workoutsRecord = [];
+
 
 
 		for (var i in workouts) {
@@ -14,7 +14,7 @@ module.exports = class {
 			var stamina = 0;
 			var magicka = 0;
 			var workoutDate = workouts[i].data.workout_date;
-			var importDate = (new Date).getTime();
+			var workoutsRecord = [];
 
 			for (var j in workouts[i].data.workout_exercises) {
 				var exerciseName = workouts[i].data.workout_exercises[j].name;
@@ -65,8 +65,8 @@ module.exports = class {
 					distance: exerciseDistance,
 					duration: exerciseDuration,
 					health: exerciseHealth,
-					magicka: exerciseMagicka,
-					stamina: exerciseStamina
+					stamina: exerciseStamina,
+					magicka: exerciseMagicka
 				});
 			}
 

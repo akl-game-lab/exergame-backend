@@ -9,7 +9,7 @@ var db = require('../db');
 var User = require('../models/user');
 
 describe('Index', function() {
-	var url = 'http://localhost:3000';
+	var url = 'http://localhost';
 	// within before() you can run all the operations that are needed to setup your tests. In this case
 	// I want to create a connection with the database, and when I'm done, I call done().
 	before(function(done) {
