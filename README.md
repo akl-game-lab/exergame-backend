@@ -9,10 +9,8 @@ Gathers data from fitness tracking services and exposes it for use in video game
 ### Installation
 
 ```
-# Install node.js v4 (and npm) (https://nodejs.org)
+# Install node.js v4.0.0 (and npm) (https://nodejs.org)
 # Install mongodb (https://www.mongodb.com/download-center)
-# Install PhantomJS headless browser (http://phantomjs.org)
-npm install -g casperjs
 npm install
 ```
 
@@ -49,6 +47,3 @@ The transformer classes contain the 'transform' method to format the exercise da
 
 If a new format is to be created, simply write the appropriate transformer class and update the TransformerFactory class
 
-### CasperJS
-
-The fitness tracking service used at the moment is exercise.com which does not have a publicly facing API. CasperJS is the headless browser which manually logs into exercise.com as it were an actual user and pulls the relavent data into this system.

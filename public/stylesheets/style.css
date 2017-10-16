@@ -6,6 +6,6 @@ form > input {
   margin-bottom: 4px;
 }
 
-.btn {
-  margin-bottom: 8px;
+.important-info {
+  color: red;
 }
