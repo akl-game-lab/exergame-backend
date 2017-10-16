@@ -9,3 +9,7 @@ form > input {
 .important-info {
   color: red;
 }
+
+.btn {
+  margin-bottom: 5px;
+}
