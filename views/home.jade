@@ -18,3 +18,22 @@ block content
 				a(href='/mod', class='btn btn-info download') Download Mod
 			div
 				a(href='/signout', class='btn btn-danger sign-out') Sign Out
+
+			if(recentWorkouts.length)
+				h2 Recent Workouts
+					each val in recentWorkouts
+						h3 #{val.workoutDate}
+						table(class='table table-bordered')
+							tr
+								th(class="col-sm-3") Exercise
+								th(class="col-sm-2") Reps
+								th(class="col-sm-2") Sets
+								th(class="col-sm-2") Distance
+								th(class="col-sm-2") Duration (Minutes)
+									each workout in val.workoutsRecord
+										tr
+											td(class="col-sm-3") #{workout.exerciseName}
+											td(class="col-sm-2") #{workout.reps}
+											td(class="col-sm-2") #{workout.sets}
+											td(class="col-sm-2") #{workout.distance}
+											td(class="col-sm-2") #{workout.duration}

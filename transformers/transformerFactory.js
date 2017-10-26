@@ -1,6 +1,7 @@
 var UnifiedTransformer = require('./UnifiedTransformer');
 var HsmTransformer = require('./HsmTransformer');
 var RawTransformer = require('./RawTransformer');
+var RecentWorkoutTransformer = require('./RecentWorkoutTransformer');
 var log = require('../misc/logger');
 
 module.exports = function (format) {
@@ -12,6 +13,8 @@ module.exports = function (format) {
 			return new UnifiedTransformer();
 		case 'raw':
 			return new RawTransformer();
+		case 'recent':
+			return new RecentWorkoutTransformer();
 		default:
 	}
 };
