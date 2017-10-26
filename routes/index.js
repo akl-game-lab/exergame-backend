@@ -5,6 +5,7 @@ var cryptoJs = require('crypto-js');
 var config = require('../config');
 var log = require('../misc/logger');
 var retrieveExerciseData = require('../misc/sources/exercise-dot-com').retrieveExerciseData;
+var User = require('../models/user');
 
 
 var isAuthenticated = function (req, res, next) {
@@ -51,10 +52,13 @@ module.exports = function (passport) {
 	/* GET Home Page */
 	router.get('/home', isAuthenticated, function (req, res) {
 		log.info('Home page requested');
-		res.render('home', {
-			user: req.user,
-			successMessage: req.query.successMessage,
-			errorMessage: req.query.errorMessage
+		User.getRecentWorkouts(req.user.email, function(recentWorkouts) {
+			res.render('home', {
+				user: req.user,
+				successMessage: req.query.successMessage,
+				errorMessage: req.query.errorMessage,
+				recentWorkouts: recentWorkouts.data.workouts
+			});
 		});
 	});
 
