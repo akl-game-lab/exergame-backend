@@ -11,15 +11,31 @@ block content
 				div.alert.alert-success #{successMessage}
 			if errorMessage
 				div.alert.alert-danger #{errorMessage}
-			div(class='btn-group')
-				button(type='button', class='btn btn-primary dropdown-toggle', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Register Tracker
-					span(class='caret')
-				ul(class='dropdown-menu')
-					li
-						a(href='/settings') Exercise.com
-					li
-						a(href='#') More coming soon!
+			if !user.credentials.exerciseDotCom.username
+				div
+					a(href='/settings', class='btn btn-primary') Register Exercise.com
 			div
 				a(href='/mod', class='btn btn-info download') Download Mod
 			div
 				a(href='/signout', class='btn btn-danger sign-out') Sign Out
+
+			h2 Recent Workouts
+				if(recentWorkouts.length)
+					each val in recentWorkouts
+						h3 #{val.workoutDate}
+						table(class='table table-bordered')
+							tr
+								th(class="col-sm-3") Exercise
+								th(class="col-sm-2") Reps
+								th(class="col-sm-2") Sets
+								th(class="col-sm-2") Distance
+								th(class="col-sm-2") Duration (Minutes)
+									each workout in val.workoutsRecord
+										tr
+											td(class="col-sm-3") #{workout.exerciseName}
+											td(class="col-sm-2") #{workout.reps}
+											td(class="col-sm-2") #{workout.sets}
+											td(class="col-sm-2") #{workout.distance}
+											td(class="col-sm-2") #{workout.duration}
+				else
+					h3.error No recent workouts found

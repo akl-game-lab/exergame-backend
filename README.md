@@ -9,7 +9,7 @@ Gathers data from fitness tracking services and exposes it for use in video game
 ### Installation
 
 ```
-# Install node.js v4.0.0 (and npm) (https://nodejs.org)
+# Install node.js v6.11.3 (and npm) (https://nodejs.org) - (note: nvm is a helpful tool for getting the right node version)
 # Install mongodb (https://www.mongodb.com/download-center)
 npm install
 ```
