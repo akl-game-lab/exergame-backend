@@ -19,8 +19,8 @@ block content
 			div
 				a(href='/signout', class='btn btn-danger sign-out') Sign Out
 
-			if(recentWorkouts.length)
-				h2 Recent Workouts
+			h2 Recent Workouts
+				if(recentWorkouts.length)
 					each val in recentWorkouts
 						h3 #{val.workoutDate}
 						table(class='table table-bordered')
@@ -37,3 +37,5 @@ block content
 											td(class="col-sm-2") #{workout.sets}
 											td(class="col-sm-2") #{workout.distance}
 											td(class="col-sm-2") #{workout.duration}
+				else
+					h3.error No recent workouts found
