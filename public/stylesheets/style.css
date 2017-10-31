@@ -6,7 +6,7 @@ form > input {
   margin-bottom: 4px;
 }
 
-.important-info {
+.important-info, .error {
   color: red;
 }
 
