@@ -1,5 +1,6 @@
+'use strict'
 var server = require('../index');
 
-before(function () {
+before(() => {
 	server();
 });

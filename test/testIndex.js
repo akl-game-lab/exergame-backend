@@ -1,24 +1,25 @@
-var assert = require('assert');
-var request = require('supertest');
-var mongoose = require('mongoose');
-var http = require('http');
-var bCrypt = require('bcrypt-nodejs');
+'use strict'
+const assert = require('assert');
+const request = require('supertest');
+const mongoose = require('mongoose');
+const http = require('http');
+const bCrypt = require('bcrypt-nodejs');
 
-var server = require('../index');
-var db = require('../db');
-var User = require('../models/user');
+const server = require('../index');
+const db = require('../db');
+const User = require('../models/user');
 
-describe('Index', function() {
-	var url = 'http://localhost';
+describe('Index', () => {
+	const url = 'http://localhost';
 	// within before() you can run all the operations that are needed to setup your tests. In this case
 	// I want to create a connection with the database, and when I'm done, I call done().
-	before(function(done) {
+	before( done => {
 		// In our tests we use the test db
-		mongoose.connection.close(function (err) {
+		mongoose.connection.close( err => {
 			if (err) {
 				console.error(err);
 			}
-			mongoose.connect(db.testUrl, function (err) {
+			mongoose.connect(db.testUrl, err => {
 				if (err) {
 					console.error(err);
 				}
@@ -27,8 +28,8 @@ describe('Index', function() {
 		});
 	});
 
-	after(function (done) {
-		User.remove({firstName: 'Test'}, function () {
+	after( done => {
+		User.remove({firstName: 'Test'}, () => {
 			done();
 		});
 	});
@@ -40,13 +41,13 @@ describe('Index', function() {
 	// specify a function that takes a single parameter, "done", that we will use
 	// to specify when our test is completed, and that's what makes easy
 	// to perform async test!
-	describe('/signup', function() {
-		it('should return the register page', function(done) {
+	describe('/signup', () => {
+		it('should return the register page', done => {
 			// Make the request
 			request(url)
 			.get('/signup')
 			// end handles the response
-			.end(function(err, res) {
+			.end((err, res) => {
 				assert.ifError(err);
 
 				assert.equal(res.status, 200, 'request returned an error');
@@ -55,8 +56,8 @@ describe('Index', function() {
 			});
 		});
 
-		it('should create a new user when a post is made', function (done) {
-			var data = {
+		it('should create a new user when a post is made', done => {
+			const data = {
 				username: 'TestUser',
 				password: 'TestPassword',
 				email: 'test@example.com',
@@ -67,14 +68,14 @@ describe('Index', function() {
 			request(url)
 			.post('/signup')
 			.send(data)
-			.end(function (err, res) {
+			.end((err, res) => {
 				assert.ifError(err);
 
 				assert.equal(res.status, 302, 'request returned an error');
 				assert.equal(res.text, 'Found. Redirecting to /home');
 
 				// Check user was created
-				User.find({firstName: 'Test'}, function (err, results) {
+				User.find({firstName: 'Test'}, (err, results) => {
 					assert.ifError(err);
 
 					assert.equal(results.length, 1);
@@ -90,8 +91,8 @@ describe('Index', function() {
 			});
 		});
 
-		it('should fail when given a user that already exists', function (done) {
-			var data = {
+		it('should fail when given a user that already exists', done => {
+			const data = {
 				username: 'TestUser',
 				password: 'TestPassword',
 				email: 'test@example.com',
@@ -102,14 +103,14 @@ describe('Index', function() {
 			request(url)
 			.post('/signup')
 			.send(data)
-			.end(function (err, res) {
+			.end((err, res) => {
 				assert.ifError(err);
 
 				assert.equal(res.status, 302, 'request returned an error');
 				assert.equal(res.text, 'Found. Redirecting to /signup');
 
 				// Check no user was created
-				User.find({firstName: 'Test2'}, function (err, results) {
+				User.find({firstName: 'Test2'}, (err, results) => {
 					assert.ifError(err);
 
 					assert.equal(results.length, 0);
@@ -118,8 +119,8 @@ describe('Index', function() {
 			});
 		});
 
-		it('should fail when given invalid data', function (done) {
-			var data = {
+		it('should fail when given invalid data', done => {
+			const data = {
 				password: 'TestPassword',
 				email: 'test3@example.com',
 				firstName: 'Test3',
@@ -129,14 +130,14 @@ describe('Index', function() {
 			request(url)
 			.post('/signup')
 			.send(data)
-			.end(function (err, res) {
+			.end((err, res) => {
 				assert.ifError(err);
 
 				assert.equal(res.status, 302, 'request returned an error');
 				assert.equal(res.text, 'Found. Redirecting to /signup');
 
 				// Check no user was created
-				User.find({firstName: 'Test3'}, function (err, results) {
+				User.find({firstName: 'Test3'}, (err, results) => {
 					assert.ifError(err);
 
 					assert.equal(results.length, 0);
@@ -145,8 +146,8 @@ describe('Index', function() {
 			});
 		});
 
-		it('should unsuccessfully log in due to incorrect password', function(done)	{
-			var loginData = {
+		it('should unsuccessfully log in due to incorrect password', done =>	{
+			const loginData = {
 				password: 'badPassword',
 				username: 'TestUser'
 			};
@@ -154,7 +155,7 @@ describe('Index', function() {
 			request(url)
 			.post('/login')
 			.send(loginData)
-			.end(function (err, res) {
+			.end((err, res) => {
 				assert.ifError(err);
 				//failed login redirects to /
 				assert.equal(res.text, 'Found. Redirecting to /');
@@ -162,8 +163,8 @@ describe('Index', function() {
 			});
 		});
 
-		it('should unsuccessfully log in due to invalid username', function(done)	{
-			var loginData = {
+		it('should unsuccessfully log in due to invalid username', done =>	{
+			const loginData = {
 				password: 'TestPassword',
 				username: 'badUser'
 			};
@@ -171,7 +172,7 @@ describe('Index', function() {
 			request(url)
 			.post('/login')
 			.send(loginData)
-			.end(function (err, res) {
+			.end((err, res) => {
 				assert.ifError(err);
 				//failed login redirects to /
 				assert.equal(res.text, 'Found. Redirecting to /');
@@ -179,9 +180,9 @@ describe('Index', function() {
 			});
 		});
 
-		it('should successfully log in and redirect to home', function(done)	{
+		it('should successfully log in and redirect to home', done =>	{
 
-			var loginData = {
+			const loginData = {
 				password: 'TestPassword',
 				username: 'test@example.com'
 			};
@@ -189,7 +190,7 @@ describe('Index', function() {
 			request(url)
 			.post('/login')
 			.send(loginData)
-			.end(function (err, res) {
+			.end((err, res) => {
 				assert.ifError(err);
 				//successful login redirects to home
 				assert.equal(res.text, 'Found. Redirecting to /home');
@@ -197,8 +198,8 @@ describe('Index', function() {
 			});
 		});
 
-		it('should successfully log out', function (done)	{
-			var loginData = {
+		it('should successfully log out', done =>	{
+			const loginData = {
 				password: 'TestPassword',
 				username: 'test@example.com'
 			};
@@ -206,14 +207,14 @@ describe('Index', function() {
 			request(url)
 			.post('/login')
 			.send(loginData)
-			.end(function (err, res) {
+			.end((err, res) => {
 				assert.ifError(err);
 				//successful login redirects to home
 				assert.equal(res.text, 'Found. Redirecting to /home');
 
 				request(url)
 				.get('/signout')
-				.end(function (err, res) {
+				.end((err, res) => {
 					assert.ifError(err);
 
 					assert.equal(res.text, 'Found. Redirecting to /');
@@ -222,14 +223,14 @@ describe('Index', function() {
 			});
 		});
 
-		it('should unsuccessfully navigate to home if user not logged in', function (done) {
+		it('should unsuccessfully navigate to home if user not logged in', done => {
 			request(url)
 			.get('/signout')
-			.end(function (err, res) {
+			.end((err, res) => {
 
 				request(url)
 				.get('/home')
-				.end(function (err, res) {
+				.end((err, res) => {
 				  assert.equal(res.text, 'Found. Redirecting to /');
 					done();
 				});

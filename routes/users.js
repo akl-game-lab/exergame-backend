@@ -1,19 +1,20 @@
-var express = require('express');
-var router = express.Router();
-var Workout = require('../models/workout');
-var ExerciseDotCom = require('../models/sources/exercise-dot-com');
-var User = require('../models/user');
-var getByEmail = require('../misc/tasks');
-var transformerFactory = require('../transformers/transformerFactory');
-var ObjectId = require('mongoose').Types.ObjectId;
-var log = require('../misc/logger');
+'use strict'
+const express = require('express');
+const router = express.Router();
+const Workout = require('../models/workout');
+const ExerciseDotCom = require('../models/sources/exercise-dot-com');
+const User = require('../models/user');
+const getByEmail = require('../misc/tasks');
+const transformerFactory = require('../transformers/transformerFactory');
+const ObjectId = require('mongoose').Types.ObjectId;
+const log = require('../misc/logger');
 
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
 passport.use(new LocalStrategy(
-	function (username, password, done) {
-		User.findOne({ username: username }, function (err, user) {
+	(username, password, done) => {
+		User.findOne({ username: username }, (err, user) => {
 			if (err) {
 				log.error(err);
 				return done(err);
@@ -35,14 +36,14 @@ passport.use(new LocalStrategy(
 	}
 ));
 
-passport.serializeUser(function (user, done) {
+passport.serializeUser((user, done) => {
 	log.info('serializing user');
 	done(null, user._id);
 });
 
-passport.deserializeUser(function (id, done) {
+passport.deserializeUser((id, done) => {
 	log.info('deserializing user');
-	User.findById(id, function (err, user) {
+	User.findById(id, (err, user) => {
 		done(err, user);
 	});
 });
@@ -53,12 +54,12 @@ router.post('/login', passport.authenticate('local', {
 	failureFlash: true
 }));
 
-router.get('/:id/forceUpdate', function (req, res, next) {
-	var userId = decodeURIComponent(req.params.id);
+router.get('/:id/forceUpdate', (req, res, next) => {
+	const userId = decodeURIComponent(req.params.id);
 	log.info('fetching data from exercise service with force update');
 	User.find({
 		email: userId
-	}, function (err, users) {
+	}, (err, users) => {
 		if (userId === 'null@gamelab.ac.nz') {
 			// For testing purposes
 			res.status(503).send(null);
@@ -97,29 +98,29 @@ router.get('/:id/forceUpdate', function (req, res, next) {
 	});
 });
 
-router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
+router.get('/:id/workouts/:format/:from/:to', (req, res, next) => {
 	log.info('workouts requested');
-	var userId = decodeURIComponent(req.params.id);
-	var format = decodeURIComponent(req.params.format);
-	var from = parseInt(req.params.from); // In seconds for Skyrim
-	var to = parseInt(req.params.to); // In seconds for Skyrim
-	var sendData = {
+	const userId = decodeURIComponent(req.params.id);
+	const format = decodeURIComponent(req.params.format);
+	const from = parseInt(req.params.from); // In seconds for Skyrim
+	const to = parseInt(req.params.to); // In seconds for Skyrim
+	let sendData = {
 		data: {}
 	};
 
 	log.info(`Decoded request: /${userId}/workouts/${format}/${from}/${to}`);
 
 	if (Math.abs(to - (Date.now() / 1000)) > 60) {
-		var behind = (Date.now() / 1000) - to;
+		const behind = (Date.now() / 1000) - to;
 		log.warn(`to date out from current date. ${behind} seconds behind.`);
 	}
 
 	log.debug('transformer class instantiated');
-	var transformer = transformerFactory(format);
+	const transformer = transformerFactory(format);
 
 	User.find({
 		email: userId
-	}, function (err, users) {
+	}, (err, users) => {
 		if (userId === 'null@gamelab.ac.nz') {
 			// For testing purposes
 			res.status(503).send(null);
@@ -157,8 +158,7 @@ router.get('/:id/workouts/:format/:from/:to', function (req, res, next) {
 					$gt: new Date(from * 1000),
 					$lt: new Date(to * 1000)
 				}
-			},
-			function (err, workouts) {
+			}, (err, workouts) => {
 				if (err) {
 					log.error('workout request database error');
 					log.error(err);

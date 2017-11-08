@@ -1,15 +1,16 @@
-var express = require('express');
-var router = express.Router();
-var verifyTask = require('../misc/sources/exercise-dot-com');
-var cryptoJs = require('crypto-js');
-var config = require('../config');
-var log = require('../misc/logger');
-var retrieveExerciseData = require('../misc/sources/exercise-dot-com').retrieveExerciseData;
-var User = require('../models/user');
-var fs = require('fs');
+'use strict'
+const express = require('express');
+const router = express.Router();
+const verifyTask = require('../misc/sources/exercise-dot-com');
+const cryptoJs = require('crypto-js');
+const config = require('../config');
+const log = require('../misc/logger');
+const retrieveExerciseData = require('../misc/sources/exercise-dot-com').retrieveExerciseData;
+const User = require('../models/user');
+const fs = require('fs');
 
 
-var isAuthenticated = function (req, res, next) {
+const isAuthenticated = (req, res, next) => {
 	log.info('User authentication');
 	// if user is authenticated in the session, call the next() to call the next request handler
 	// Passport adds this method to request object. A middleware is allowed to add properties to
@@ -24,14 +25,14 @@ var isAuthenticated = function (req, res, next) {
 	res.redirect('/');
 };
 
-module.exports = function (passport) {
+module.exports = passport => {
 
     // router.get('/testing', function (req, res) {
 		// retrieveExerciseData('testgamelab@gmail.com', 'testgamelab@gmail.com', 'paulralph')
     // });
 
 	/* GET login page. */
-	router.get('/', function (req, res) {
+	router.get('/', (req, res) => {
 		// Display the Login page with any flash message, if any
 		log.info('login page requested');
 		res.render('index', { message: req.flash('message') });
@@ -41,7 +42,7 @@ module.exports = function (passport) {
 	router.post('/login', authenticate('login', '/home','/','User attempting to login'));
 
 	/* GET Registration Page */
-	router.get('/signup', function (req, res) {
+	router.get('/signup', (req, res) => {
 		log.info('Registration page requested');
 		res.render('register', { message: req.flash('message') });
 	});
@@ -51,9 +52,9 @@ module.exports = function (passport) {
 
 
 	/* GET Home Page */
-	router.get('/home', isAuthenticated, function (req, res) {
+	router.get('/home', isAuthenticated, (req, res) => {
 		log.info('Home page requested');
-		User.getRecentWorkouts(req.user.email, function(recentWorkouts) {
+		User.getRecentWorkouts(req.user.email, recentWorkouts => {
 			res.render('home', {
 				user: req.user,
 				successMessage: req.query.successMessage,
@@ -64,27 +65,27 @@ module.exports = function (passport) {
 	});
 
 	/* Handle Logout */
-	router.get('/signout', function (req, res) {
+	router.get('/signout', (req, res) => {
 		log.info('User logging out');
 		req.logout();
 		res.redirect('/');
 	});
 
 	/* Account Settings*/
-	router.get('/settings', isAuthenticated, function (req, res) {
+	router.get('/settings', isAuthenticated, (req, res) => {
 		log.info('account settings requested');
 		res.render('settings', { user: req.user });
 	});
 
-	router.get('/mod', function (req, res) {
+	router.get('/mod', (req, res) => {
 		log.info('mod page requested');
 		res.render('mod');
 	});
 
-	router.get('/mod/download', function (req, res) {
+	router.get('/mod/download', (req, res) => {
 		log.info('mod download requested');
-		var path = 'public/mod/latest'
-		fs.readdir(path, function(err, files) {
+		const path = 'public/mod/latest'
+		fs.readdir(path, (err, files) => {
 			if(err) {
 				res.status(500)
 			  res.render('error', {
@@ -98,9 +99,9 @@ module.exports = function (passport) {
 
 	});
 
-	router.post('/settings', isAuthenticated, function (req, res) {
-		var username = req.body['credentials.exerciseDotCom.username'] || undefined;
-		var password = req.body['credentials.exerciseDotCom.password'] || undefined;
+	router.post('/settings', isAuthenticated, (req, res) => {
+		const username = req.body['credentials.exerciseDotCom.username'] || undefined;
+		const password = req.body['credentials.exerciseDotCom.password'] || undefined;
 		log.info('user attempting to add credentials for exercise.com');
 
 		req.user.credentials = {
@@ -110,10 +111,10 @@ module.exports = function (passport) {
 			}
 		};
 
-		var errorString = 'You need to sign in or sign up before continuing.';
+		const errorString = 'You need to sign in or sign up before continuing.';
 
 		log.debug('verifying exercise.com account');
-		verifyTask.verifyExerciseDotCom(username, password, function (execReturnVal) {
+		verifyTask.verifyExerciseDotCom(username, password, execReturnVal => {
 			if (execReturnVal.indexOf(errorString) > -1) {
 				log.info('exercise.com account does not exist');
 				res.render('settings', {
@@ -123,7 +124,7 @@ module.exports = function (passport) {
 				return;
 			}
 
-			req.user.save(function (err) {
+			req.user.save(err => {
 				if (err) {
 					//@TODO: better way to tell users about errors.
 					log.error(err);
