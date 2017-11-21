@@ -14,7 +14,7 @@ Gathers data from fitness tracking services and exposes it for use in video game
 npm install
 ```
 
-Copy config.js.sample to config.js and set encryption key to some value which is to be kept secret (do not commit config.js). If you change this key, the contents of your database will become invalid.
+Copy config.js.sample to config.js and set encryption key to some string value which is to be kept secret (do not commit config.js). If you change this key, the contents of your database will become invalid.
 
 ```
 ./bin/www
