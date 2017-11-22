@@ -6,6 +6,7 @@ var config = require('../config');
 var log = require('../misc/logger');
 var retrieveExerciseData = require('../misc/sources/exercise-dot-com').retrieveExerciseData;
 var User = require('../models/user');
+var fs = require('fs');
 
 
 var isAuthenticated = function (req, res, next) {
@@ -82,7 +83,19 @@ module.exports = function (passport) {
 
 	router.get('/mod/download', function (req, res) {
 		log.info('mod download requested');
-		res.sendFile('skyrimExergameMod.zip', {root: 'public'});
+		var path = 'public/mod/latest'
+		fs.readdir(path, function(err, files) {
+			if(err) {
+				res.status(500)
+			  res.render('error', {
+			    message: 'File not found'
+			  })
+				log.error(err)
+			} else {
+				res.sendFile(files[0], {root: path});
+			}
+		});
+
 	});
 
 	router.post('/settings', isAuthenticated, function (req, res) {
