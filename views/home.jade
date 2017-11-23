@@ -2,11 +2,10 @@ extends layout
 
 block vars
 	- var pageTitle = 'Home'
-	
+
 block content
 	div.container
 		#user
-			h1 Welcome #{user.firstName}.
 			if successMessage
 				div.alert.alert-success #{successMessage}
 			if errorMessage
@@ -14,10 +13,6 @@ block content
 			if !user.credentials.exerciseDotCom.username
 				div
 					a(href='/settings', class='btn btn-primary') Register Exercise.com
-			div
-				a(href='/mod', class='btn btn-info download') Download Mod
-			div
-				a(href='/signout', class='btn btn-danger sign-out') Sign Out
 
 			h2 Recent Workouts
 				if(recentWorkouts.length)

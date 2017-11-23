@@ -73,12 +73,20 @@ module.exports = function (passport) {
 	/* Account Settings*/
 	router.get('/settings', isAuthenticated, function (req, res) {
 		log.info('account settings requested');
-		res.render('settings', { user: req.user });
+		if(req.user.credentials.exerciseDotCom.username) {
+			res.redirect('/home?errorMessage=Exercise.com account already registered!');
+		} else {
+			res.render('settings', { user: req.user });
+		}
 	});
 
 	router.get('/mod', function (req, res) {
 		log.info('mod page requested');
-		res.render('mod');
+		if(req.user)
+			res.render('mod', { user: req.user });
+		else {
+			res.render('mod');
+		}
 	});
 
 	router.get('/mod/download', function (req, res) {
