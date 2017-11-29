@@ -7,9 +7,13 @@ block content
 	div.container
 		#user
 			if successMessage
-				div.alert.alert-success #{successMessage}
+				div.alert.alert-success.alert-dismissable
+					a(href='#', class='close', data-dismiss='alert', aria-label='close') &times
+					p #{successMessage}
 			if errorMessage
-				div.alert.alert-danger #{errorMessage}
+				div.alert.alert-danger.alert-dismissable
+					a(href='#', class='close', data-dismiss='alert', aria-label='close') &times
+					p #{errorMessage}
 			if !user.credentials.exerciseDotCom.username
 				div
 					a(href='/settings', class='btn btn-primary') Register Exercise.com
