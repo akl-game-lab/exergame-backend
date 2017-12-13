@@ -1,5 +1,5 @@
 language: node_js
-script: "sudo $(which npm) test"
+script: "sudo npm test"
 before_install:
 - "echo 'module.exports = {encryptionKey: process.env.TRAVIS_SECRET_KEY};' > config.js"
 services:
