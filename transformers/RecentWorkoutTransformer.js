@@ -16,6 +16,7 @@ module.exports = class {
 				var exerciseSets = 0;
 				var exerciseDistance = 0;
 				var exerciseDuration = 0;
+				var exercisePoints = '';
 
 
 				if (workouts[i].data.workout_exercises.hasOwnProperty(j)) {
@@ -25,15 +26,17 @@ module.exports = class {
 						//Populating variables for individual exercises
 						exerciseReps = exerciseData.total_reps;
 						exerciseSets = exerciseData.workout_exercise_sets.length;
+						exercisePoints = exerciseData.total_points + " health"
 
 
 					} else if (exerciseData.hasOwnProperty('distance') && typeof parseFloat(exerciseData.distance) === 'number' && parseFloat(exerciseData.distance) > 0) {
 						exerciseDistance = exerciseData.distance;
 						exerciseSets = exerciseData.workout_exercise_sets.length;
-
+						exercisePoints = exerciseData.total_points + " stamina"
 					} else {
 						exerciseDuration = exerciseData.total_time;
 						exerciseSets = exerciseData.workout_exercise_sets.length;
+						exercisePoints = exerciseData.total_points + " magicka"
 					}
 				}
 
@@ -45,6 +48,7 @@ module.exports = class {
 					sets: exerciseSets,
 					distance: exerciseDistance,
 					duration: exerciseDuration/60,
+					points: exercisePoints
 				});
 			}
 

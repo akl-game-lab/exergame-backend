@@ -16,7 +16,7 @@ var initPassport = require('./passport/init');
 var dbConfig = require('./db');
 
 log.info('connecting to database');
-mongoose.connect(dbConfig.url);
+mongoose.connect(dbConfig.url, {useMongoClient: true});
 
 var routes = require('./routes/index');
 var users = require('./routes/users');

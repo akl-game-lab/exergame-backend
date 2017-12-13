@@ -4,8 +4,9 @@ var verifyTask = require('../misc/sources/exercise-dot-com');
 var cryptoJs = require('crypto-js');
 var config = require('../config');
 var log = require('../misc/logger');
-var retrieveExerciseData = require('../misc/sources/exercise-dot-com').retrieveExerciseData;
+var retrieveExerciseData = require('../misc/tasks');
 var User = require('../models/user');
+
 var fs = require('fs');
 
 
@@ -54,12 +55,25 @@ module.exports = function (passport) {
 	router.get('/home', isAuthenticated, function (req, res) {
 		log.info('Home page requested');
 		User.getRecentWorkouts(req.user.email, function(recentWorkouts) {
+			recentWorkouts.data.workouts.sort(function(a,b){
+			  return new Date(b.workoutDate) - new Date(a.workoutDate);
+			});
 			res.render('home', {
 				user: req.user,
 				successMessage: req.query.successMessage,
 				errorMessage: req.query.errorMessage,
 				recentWorkouts: recentWorkouts.data.workouts
 			});
+		});
+	});
+
+	router.get('/workouts', isAuthenticated, function (req, res) {
+		log.info('workouts Requested via API');
+		User.getRecentWorkouts(req.user.email, function(recentWorkouts) {
+			recentWorkouts.data.workouts.sort(function(a,b){
+			  return new Date(b.workoutDate) - new Date(a.workoutDate);
+			});
+			res.json(recentWorkouts);
 		});
 	});
 
@@ -136,9 +150,9 @@ module.exports = function (passport) {
 					//@TODO: better way to tell users about errors.
 					log.error(err);
 				}
-
-				log.info('exercise.com account verified, redirecting to home');
-				res.redirect('/home?successMessage=Account registration successful!');
+				retrieveExerciseData(req.user.email)
+				log.info('exercise.com account verified, redirecting to home. (note: it may take up to a minute for your recent workouts to be fetched)');
+				res.redirect('/home?successMessage=Account registration successful! (note: it may take up to a minute for your recent workouts to be fetched)');
 			});
 		});
 	});

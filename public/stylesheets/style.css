@@ -34,6 +34,10 @@ div.container.login-form {
 	border-radius: 15px;
 }
 
+.content-spacer {
+	padding: 100px
+}
+
 .footer {
     line-height: 60px;
 		margin-top: 30px;
