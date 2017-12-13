@@ -55,12 +55,25 @@ module.exports = function (passport) {
 	router.get('/home', isAuthenticated, function (req, res) {
 		log.info('Home page requested');
 		User.getRecentWorkouts(req.user.email, function(recentWorkouts) {
+			recentWorkouts.data.workouts.sort(function(a,b){
+			  return new Date(b.workoutDate) - new Date(a.workoutDate);
+			});
 			res.render('home', {
 				user: req.user,
 				successMessage: req.query.successMessage,
 				errorMessage: req.query.errorMessage,
 				recentWorkouts: recentWorkouts.data.workouts
 			});
+		});
+	});
+
+	router.get('/workouts', isAuthenticated, function (req, res) {
+		log.info('workouts Requested via API');
+		User.getRecentWorkouts(req.user.email, function(recentWorkouts) {
+			recentWorkouts.data.workouts.sort(function(a,b){
+			  return new Date(b.workoutDate) - new Date(a.workoutDate);
+			});
+			res.json(recentWorkouts);
 		});
 	});
 

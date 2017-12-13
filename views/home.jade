@@ -17,24 +17,26 @@ block content
 			if !user.credentials.exerciseDotCom.username
 				div
 					a(href='/settings', class='btn btn-primary') Register Exercise.com
-
-			h2 Recent Workouts
-				if(recentWorkouts.length)
-					each val in recentWorkouts
-						h3 #{val.workoutDate}
-						table(class='table table-bordered')
-							tr
-								th(class="col-sm-3") Exercise
-								th(class="col-sm-2") Reps
-								th(class="col-sm-2") Sets
-								th(class="col-sm-2") Distance
-								th(class="col-sm-2") Duration (Minutes)
-									each workout in val.workoutsRecord
-										tr
-											td(class="col-sm-3") #{workout.exerciseName}
-											td(class="col-sm-2") #{workout.reps}
-											td(class="col-sm-2") #{workout.sets}
-											td(class="col-sm-2") #{workout.distance}
-											td(class="col-sm-2") #{workout.duration}
-				else
-					h3.error No recent workouts found
+			div.recent-workouts
+				h2 Recent Workouts
+					if(recentWorkouts.length)
+						each val in recentWorkouts
+							h3 #{val.workoutDate}
+							table(class='table table-bordered')
+								tr
+									th(class="col-sm-2") Exercise
+									th(class="col-sm-1") Reps
+									th(class="col-sm-1") Sets
+									th(class="col-sm-1") Distance
+									th(class="col-sm-1") Duration (Minutes)
+									th(class="col-sm-1") Points
+										each workout in val.workoutsRecord
+											tr
+												td(class="col-sm-2") #{workout.exerciseName}
+												td(class="col-sm-1") #{workout.reps}
+												td(class="col-sm-1") #{workout.sets}
+												td(class="col-sm-1") #{workout.distance}
+												td(class="col-sm-1") #{workout.duration}
+												td(class="col-sm-1") #{workout.points}
+					else
+						h4.error No recent workouts found
