@@ -37,6 +37,10 @@ div.container.login-form {
 .content-spacer {
 	padding: 100px
 }
+ .update-workouts-button {
+	 float: right;
+	 margin: 5px;
+ }
 
 .footer {
     line-height: 60px;
