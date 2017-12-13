@@ -18,6 +18,8 @@ block content
 				div
 					a(href='/settings', class='btn btn-primary') Register Exercise.com
 			div.recent-workouts
+				if user.credentials.exerciseDotCom.username
+					button(type="button" class="btn btn-primary update-workouts-button" id="load" data-id="#{user.email}" data-loading-text="<i class='fa fa-spinner fa-spin'></i> loading") update workouts
 				h2 Recent Workouts
 					if(recentWorkouts.length)
 						each val in recentWorkouts
