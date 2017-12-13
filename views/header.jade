@@ -1,0 +1,21 @@
+block header
+	nav.navbar.navbar-default
+		div.container
+			a(href='/home').navbar-brand Skyrim Exergaming Portal
+			if(user)
+				ul.nav.navbar-nav.navbar-right
+					li.dropdown
+						a.dropdown-toggle(data-toggle='dropdown', href='#')
+							span.glyphicon.glyphicon-user
+							span.username Logged in as #{user.firstName}
+							span.caret
+						ul.dropdown-menu
+							li
+								a(href='/mod') Download Mod
+							if !user.credentials.exerciseDotCom.username
+								li
+									a(href='/settings') Register Exercise.com
+							li(role="separator" class="divider")
+							li
+								a(href='/signout') Signout
+									<i class="pull-right glyphicon glyphicon-log-out"></i>
