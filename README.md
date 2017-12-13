@@ -9,12 +9,12 @@ Gathers data from fitness tracking services and exposes it for use in video game
 ### Installation
 
 ```
-# Install node.js v6.11.5 (and npm) (https://nodejs.org) - (note: nvm is a helpful tool for getting the right node version)
+# Install node.js v6.11.x (and npm) (https://nodejs.org) - (note: nvm is a helpful tool for getting the right node version)
 # Install mongodb (https://www.mongodb.com/download-center)
 npm install
 ```
 
-Copy config.js.sample to config.js and set encryption key to some value which is to be kept secret (do not commit config.js). If you change this key, the contents of your database will become invalid.
+Copy config.js.sample to config.js and set encryption key to some string value which is to be kept secret (do not commit config.js). If you change this key, the contents of your database will become invalid.
 
 ```
 ./bin/www
