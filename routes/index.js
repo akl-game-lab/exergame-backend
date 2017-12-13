@@ -67,16 +67,6 @@ module.exports = function (passport) {
 		});
 	});
 
-	router.get('/workouts', isAuthenticated, function (req, res) {
-		log.info('workouts Requested via API');
-		User.getRecentWorkouts(req.user.email, function(recentWorkouts) {
-			recentWorkouts.data.workouts.sort(function(a,b){
-			  return new Date(b.workoutDate) - new Date(a.workoutDate);
-			});
-			res.json(recentWorkouts);
-		});
-	});
-
 	/* Handle Logout */
 	router.get('/signout', function (req, res) {
 		log.info('User logging out');
@@ -151,7 +141,7 @@ module.exports = function (passport) {
 					log.error(err);
 				}
 				retrieveExerciseData(req.user.email)
-				log.info('exercise.com account verified, redirecting to home. (note: it may take up to a minute for your recent workouts to be fetched)');
+				log.info('exercise.com account verified, redirecting to home');
 				res.redirect('/home?successMessage=Account registration successful! (note: it may take up to a minute for your recent workouts to be fetched)');
 			});
 		});

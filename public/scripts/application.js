@@ -1,9 +1,11 @@
 $( document ).ready(function() {
-	if($('.recent-workouts').length) {
-		$.ajax({
-	  	url: "/workouts",
-		}).done(function(workouts) {
-		  console.log(workouts)
-		});
-	}
+	$('.update-workouts-button').on('click', function() {
+		var $this = $(this);
+		$this.button('loading');
+		setTimeout(function() {
+			window.location.reload(true);
+		}, 7000);
+		var id = $this.data('id')
+		$.get('/users/' + id + '/forceUpdate');
+	});
 });
