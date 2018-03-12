@@ -15,8 +15,8 @@ schedule.scheduleJob({ minute: [0, 20, 40] }, function () {
 	getUserData();
 });
 
-//Run Weekly at 10am on a Friday ([minute] [hour] [day of month] [month] [day of week] )
-schedule.scheduleJob('0 10 * * 5', function () {
+//Run Weekly at 10.30am on a Friday ([minute] [hour] [day of month] [month] [day of week] )
+schedule.scheduleJob('30 10 * * 5', function () {
 	log.info('Updating User data');
 	getAllUserData();
 });
