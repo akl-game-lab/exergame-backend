@@ -10,7 +10,8 @@ process.argv.forEach(function (element) {
 });
 
 // Run every hour
-schedule.scheduleJob({ minute: [0, 20, 40] }, function () {
+//schedule.scheduleJob({ minute: [0, 20, 40] }, function () {
+schedule.scheduleJob({ minute: [0, 10, 20, 30, 40, 50] }, function () {//Incresed frequency for debugging
 	log.info('Updating User data');
 	getUserData();
 });

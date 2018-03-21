@@ -82,6 +82,9 @@ module.exports = {
                   log.error(retrievedData.error);
                 } else {
                   log.info('Data successfully retrieved');
+                  log.info("-------------------------------EXERCISE DOT COM DATA BELOW-----------------------------")
+                  log.info(body);
+                  log.info("++++++++++++++++++++++++++++++++END ONE DATA PACKET++++++++++++++++++++++++++++++++++++++++++++++")
 
                   // Store the information.
                   saveData(email, retrievedData, callback);
