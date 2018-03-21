@@ -29,14 +29,14 @@ function getUserData() {
 			'$gt': Date.now() - 1000 * 60 * 60 * 24 * 7 // Has played in the last week.
 		}
 	},
-	function (err, users) {
+	function (err, users) { //Loops through all the users that have played in the last week, calling retrieveExerciseData()
 		if (err) {
 			log.error(err);
 		} else {
 			for (var i = 0; i < users.length; i++) {
-				// If user has exercise.com credentials, run casper.
+				// If user has exercise.com credentials, retrieve data from exercise.com
 				if (users[i].credentials.exerciseDotCom.username && users[i].credentials.exerciseDotCom.plainPassword) {
-					log.debug('User found with credentials, retrieving exercise data');
+					log.debug('User found with credentials, retrieving exercise data for: '+users[i].credentials.exerciseDotCom.username+' with email: '+users[i].email);
 					retrieveExerciseData(users[i].email, users[i].credentials.exerciseDotCom.username, users[i].credentials.exerciseDotCom.plainPassword);
 				} else {
 					//temp

@@ -51,7 +51,11 @@ module.exports = {
     var j = request.jar();
     request = request.defaults({jar: j});
 		request.get("https://www.exercise.com/users/sign_in", function (error, response, body) {
-    if (!error && response.statusCode == 200) {
+
+    if (!error && response.statusCode == 200) { //else Failure connecting to exercise.com
+
+
+
       log.info("https://www.exercise.com/users/sign_in, successfully loaded, retrieving authenticity token.");
 
       // Parse the returned HTML to find the authenticity token and return that value.
@@ -65,12 +69,18 @@ module.exports = {
         "user[password]": password,
         "user[remember_me]" : 0,
         "commit": "Log In"
+
+
+
       }}, function(error, response, body){
-        if (!error && response.statusCode == 200 || 302) {
+
+
+        if (!error && response.statusCode == 200 || 302) {// Else failure in first level
           log.debug(body);
           $ = cheerio.load(body);
-          if ($("a").attr('href') == "https://www.exercise.com/dashboard") {
+          if ($("a").attr('href') == "https://www.exercise.com/dashboard") { //Else failure in second level
             log.info("User: " + username + ", successfully authenticated on exercise.com");
+
             // Retrieve user workouts.
             request.get({url: "https://www.exercise.com/api/v2/workouts?all_fields=true", header: response.headers },  function (error, response, body) {
               log.debug(response.statusCode);
@@ -95,13 +105,15 @@ module.exports = {
             });
           } else {
             log.error("Unable to authenticate user: " + username);
+            log.error("Failure in first level, not at /dashboard");
             callback("You need to sign in or sign up before continuing.");
           }
         } else {
           log.error("Unable to authenticate user: " + username);
+          log.error("Failure in First level, error or status code other than 202, 302")
           callback("You need to sign in or sign up before continuing.");
         }
-      });
+      });//End local function
     } else {
       log.error("Error connecting to exercise.com");
     }
