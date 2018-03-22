@@ -36,7 +36,7 @@ function getUserData() {
 			for (var i = 0; i < users.length; i++) {
 				// If user has exercise.com credentials, retrieve data from exercise.com
 				if (users[i].credentials.exerciseDotCom.username && users[i].credentials.exerciseDotCom.plainPassword) {
-					log.debug('User found with credentials, retrieving exercise data for: '+users[i].credentials.exerciseDotCom.username+' with email: '+users[i].email);
+					log.info('User found with credentials, retrieving exercise data for: '+users[i].credentials.exerciseDotCom.username+' with email: '+users[i].email);
 					retrieveExerciseData(users[i].email, users[i].credentials.exerciseDotCom.username, users[i].credentials.exerciseDotCom.plainPassword);
 				} else {
 					//temp
@@ -74,21 +74,21 @@ function getAllUserData() {
 }
 
 function getUserDataByEmail(email, callback) {
-	log.info('finding user data using email');
-	User.findOne({ email: email }, function (err, user) {
-		log.info('Grabbed data for ' + email); // TODO Remove
-		if (err) {
-			log.error(err);
-		} else {
-			// If user has exercise.com credentials, run casper.retrieveExerciseDataretrieveExerciseData
-			if (user.credentials.exerciseDotCom.username && user.credentials.exerciseDotCom.plainPassword) {
-				retrieveExerciseData(user.email, user.credentials.exerciseDotCom.username, user.credentials.exerciseDotCom.plainPassword, callback);
-			} else {
-				//temp
-				log.warn(`User: ${user.email} has no exercise.com credentials`);
-			}
-		}
-	});
+	// log.info('finding user data using email');
+	// User.findOne({ email: email }, function (err, user) {
+	// 	log.info('Grabbed data for ' + email); // TODO Remove
+	// 	if (err) {
+	// 		log.error(err);
+	// 	} else {
+	// 		// If user has exercise.com credentials, run casper.retrieveExerciseDataretrieveExerciseData
+	// 		if (user.credentials.exerciseDotCom.username && user.credentials.exerciseDotCom.plainPassword) {
+	// 			retrieveExerciseData(user.email, user.credentials.exerciseDotCom.username, user.credentials.exerciseDotCom.plainPassword, callback);
+	// 		} else {
+	// 			//temp
+	// 			log.warn(`User: ${user.email} has no exercise.com credentials`);
+	// 		}
+	// 	}
+	// });
 }
 
 module.exports = function (email, callback) {
