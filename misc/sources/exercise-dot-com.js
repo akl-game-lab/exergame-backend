@@ -49,6 +49,9 @@ module.exports = {
 	retrieveExerciseData: function (email, username, password, callback) {
     //Clear body variable
     body = "null";
+    //Sign out first
+    var resp = request.get("http://www.exercise.com/users/sign_out");
+    log.info(resp);
     // Set up the Cookie jar
     var j = request.jar();
     request = request.defaults({jar: j});
