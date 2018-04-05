@@ -100,7 +100,7 @@ module.exports = {
         }
       });
     } else {
-      log.error("Error connecting to exercise.com");
+      log.error("Error connecting to exercise.com: "+response.statusCode);
     }
     });
 	}
