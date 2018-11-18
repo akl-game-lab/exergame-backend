@@ -55,6 +55,7 @@ userSchema.statics.getRecentWorkouts = function(email, callback) {
 		function (err, workouts) {
 			log.info('recent workouts found, transforming and sending');
 			sendData.data.workouts = transformer.transform(workouts);
+			log.info(sendData.data.workouts)
 			callback(sendData);
 		});
 	})
