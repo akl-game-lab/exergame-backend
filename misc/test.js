@@ -39,7 +39,7 @@ function getUserData() {
 			log.error(err);
 		} else {
 			for (userid of users){
-				log.debug(JSON.stringify(userid));
+				console.log(JSON.stringify(userid));
 				// If user has exercise.com credentials, run casper.
 				if (userid.credentials.exerciseDotCom.username && userid.credentials.exerciseDotCom.plainPassword) {
 					var email = userid.email;
@@ -57,7 +57,7 @@ function getUserData() {
 							log.debug($("input[name='authenticity_token']").attr('value'));
 							// Send Post request to the page.
 							response =  await(request.post({url:'https://www.exercise.com/users/sign_in', formData: {
-								"utf8": "✓",
+								"utf8": "?",
 								"authenticity_token": $("input[name='authenticity_token']").attr('value'),
 								"user[email]": username,
 								"user[password]": password,
@@ -118,13 +118,13 @@ function getAllUserData() {
 			log.error(err);
 		} else {
 			log.debug('Running weekly fetch of all user data');
-			for (user of users){
-				log.debug(JSON.stringify(user));
+			for (userid of users){
+				log.debug(JSON.stringify(userid));
 				// If user has exercise.com credentials, run casper.
-				if (user.credentials.exerciseDotCom.username && user.credentials.exerciseDotCom.plainPassword) {
-					var email = user.email;
-					var username = user.credentials.exerciseDotCom.username;
-					var password = user.credentials.exerciseDotCom.plainPassword;
+				if (userid.credentials.exerciseDotCom.username && userid.credentials.exerciseDotCom.plainPassword) {
+					var email = userid.email;
+					var username = userid.credentials.exerciseDotCom.username;
+					var password = userid.credentials.exerciseDotCom.plainPassword;
 					log.debug('User found with credentials, retrieving exercise data');
 					var j = request.jar();
 					request = request.defaults({jar: j});
@@ -137,7 +137,7 @@ function getAllUserData() {
 							log.debug($("input[name='authenticity_token']").attr('value'));
 							// Send Post request to the page.
 							response =  await(request.post({url:'https://www.exercise.com/users/sign_in', formData: {
-								"utf8": "✓",
+								"utf8": "?",
 								"authenticity_token": $("input[name='authenticity_token']").attr('value'),
 								"user[email]": username,
 								"user[password]": password,
@@ -179,7 +179,7 @@ function getAllUserData() {
 					}
 				} else {
 					//temp
-					log.warn(`User: ${user.email} has no exercise.com credentials`);
+					log.warn(`User: ${user_name.email} has no exercise.com credentials`);
 				}
 			}
 		}
@@ -239,3 +239,5 @@ function saveWorkout(email, data) {
 		}
 	});
 }
+
+getUserData();

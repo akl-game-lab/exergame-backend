@@ -24,7 +24,8 @@ var logger = new (winston.Logger)({
 		new (winston.transports.File)({
 			filename: './logs/' + currentDate + '.log',
 			json: false,
-			formatter: formatter
+			formatter: formatter,
+			level: 'debug'
 		})
 	]
 });

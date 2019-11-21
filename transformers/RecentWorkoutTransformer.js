@@ -26,7 +26,7 @@ module.exports = class {
 						//Populating variables for individual exercises
 						exerciseReps = exerciseData.total_reps;
 						exerciseSets = exerciseData.workout_exercise_sets.length;
-						exercisePoints = exerciseData.total_points + " health"
+						exercisePoints = exerciseData.total_points * 1.25 + " health"
 
 
 					} else if (exerciseData.hasOwnProperty('distance') && typeof parseFloat(exerciseData.distance) === 'number' && parseFloat(exerciseData.distance) > 0) {

@@ -34,10 +34,10 @@ module.exports = class {
 						//Populating variables for individual exercises
 						exerciseReps = exerciseData.total_reps;
 						exerciseSets = exerciseData.workout_exercise_sets.length;
-						exerciseHealth = exerciseData.total_points;
+						exerciseHealth = exerciseData.total_points * 1.25;
 
 						// Accumulate total workout points
-						health += exerciseData.total_points;
+						health += exerciseData.total_points * 1.25;
 
 
 					} else if (exerciseData.hasOwnProperty('distance') && typeof parseFloat(exerciseData.distance) === 'number' && parseFloat(exerciseData.distance) > 0) {
